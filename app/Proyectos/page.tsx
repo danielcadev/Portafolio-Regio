@@ -1,5 +1,5 @@
 import ProjectCard from './ProjectCard';
-import Navbar from '../MainPage/navbar';
+import Navbar from '../components/Navbar/Navbar';
 
 
 export default function Projects() {

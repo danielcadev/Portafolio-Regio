@@ -1,5 +1,5 @@
 import SmoothScroll from './components/SmoothScroll';
-import Navbar from './MainPage/navbar';
+import Navbar from './components/Navbar/Navbar';
 import Footer from './MainPage/footer';
 import Hero from './MainPage/hero';
 import Skills from './MainPage/grid';

@@ -1,4 +1,4 @@
-import Navbar from '../MainPage/navbar';
+import Navbar from '../components/Navbar/Navbar';
 import ContactForm from '../components/Contact/ContactForm';
 
 export default function Projects() {

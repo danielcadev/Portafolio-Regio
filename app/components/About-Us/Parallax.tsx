@@ -47,7 +47,7 @@ const Parallax: React.FC<ParallaxProps> = ({ children }) => {
   return (
     <div ref={parallaxRef} className="relative min-h-screen overflow-hidden">
       <div ref={skyRef} className="absolute inset-0 z-0 h-full w-full">
-        <Image src="/Parallax/sky2.jpg" alt="Sky background" layout="fill" objectFit="cover" priority />
+        <Image src="/Parallax/skyup.png" alt="Sky background" layout="fill" objectFit="cover" priority />
       </div>
       <div ref={earthRef} className="absolute top-0 w-full h-1/2 z-20"> {/* Cambiado de bottom-0 a top-0 */}
         <Image src="/Parallax/earth2.png" alt="Earth background" layout="fill" objectFit="cover" priority />

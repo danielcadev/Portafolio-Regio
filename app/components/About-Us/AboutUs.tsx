@@ -4,7 +4,6 @@ import React, { useEffect, useRef } from 'react';
 import { gsap } from 'gsap';
 import dynamic from 'next/dynamic';
 
-
 const AboutMain = dynamic(() => import('./AboutMain'), {
   ssr: false,
   loading: () => <p>Loading...</p>,
@@ -30,24 +29,24 @@ const AboutUs: React.FC = () => {
   }, []);
 
   return (
-    <div className="relative w-full min-h-screen text-white overflow-hidden">
-      <div className="absolute top-1/4 left-1/2 transform -translate-x-1/2 -translate-y-1/2 text-center z-20">
-        <h1 ref={mainTitleRef} className="text-6xl font-bold mb-2">Sobre Nosotros</h1>
-        <div ref={subTitleRef} className="text-2xl text-gray-300 mb-8">Innovación y Tecnología Unidas</div>
-        <p ref={descriptionRef} className="max-w-2xl mx-auto text-gray-200 text-lg mb-8">
+    <div className="relative w-full min-h-screen text-white overflow-hidden flex flex-col items-center justify-center px-4">
+      <div className="text-center z-20 max-w-3xl mt-16 md:mt-0">
+        <h1 ref={mainTitleRef} className="text-4xl md:text-6xl font-bold mb-2">Sobre Nosotros</h1>
+        <div ref={subTitleRef} className="text-xl md:text-2xl text-gray-300 mb-8">Innovación y Tecnología Unidas</div>
+        <p ref={descriptionRef} className="text-base md:text-lg text-gray-200 mb-8">
           Somos un equipo dinámico de jóvenes profesionales apasionados por la tecnología. Combinamos experiencia en desarrollo web, aplicaciones móviles y automatización de hogares inteligentes para ofrecer soluciones tecnológicas integrales y de vanguardia.
         </p>
       </div>
 
-      <div ref={linksRef} className="absolute bottom-16 left-1/2 transform -translate-x-1/2 w-full max-w-5xl z-20">
-        <div className="flex flex-wrap justify-center gap-8 text-lg mb-12">
+      <div ref={linksRef} className="w-full max-w-5xl z-20 mb-12">
+        <div className="flex flex-wrap justify-center gap-4 md:gap-8 text-base md:text-lg mb-12">
           <a href="#" className="hover:text-gray-300 transition-colors duration-300">Nuestra Misión</a>
           <a href="#" className="hover:text-gray-300 transition-colors duration-300">Visión</a>
           <a href="#" className="hover:text-gray-300 transition-colors duration-300">Logros</a>
           <a href="#" className="hover:text-gray-300 transition-colors duration-300">Proceso de Trabajo</a>
           <a href="#" className="hover:text-gray-300 transition-colors duration-300">Clientes Satisfechos</a>
         </div>
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8 text-sm text-gray-200">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-8 text-sm text-gray-200">
           {[
             {
               title: "Desarrollo Web y Móvil",
@@ -62,8 +61,8 @@ const AboutUs: React.FC = () => {
               items: ["Investigación de nuevas tecnologías", "Soluciones personalizadas", "Mejora continua de procesos", "Enfoque en experiencia del usuario"]
             }
           ].map((section, index) => (
-            <div key={index} className="backdrop-filter backdrop-blur-lg bg-white bg-opacity-10 p-6 rounded-lg transition-all duration-300 hover:bg-opacity-20">
-              <h3 className="text-xl font-bold text-white mb-4">{section.title}</h3>
+            <div key={index} className="backdrop-filter backdrop-blur-lg bg-white bg-opacity-10 p-4 md:p-6 rounded-lg transition-all duration-300 hover:bg-opacity-20">
+              <h3 className="text-lg md:text-xl font-bold text-white mb-4">{section.title}</h3>
               <ul className="space-y-2">
                 {section.items.map((item, itemIndex) => (
                   <li key={itemIndex} className="flex items-center">
@@ -78,8 +77,6 @@ const AboutUs: React.FC = () => {
           ))}
         </div>
       </div>
-
-    
 
       <AboutMain />
     </div>

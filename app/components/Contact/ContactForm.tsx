@@ -28,63 +28,63 @@ const ContactForm: React.FC = () => {
   };
 
   return (
-    <div className="relative min-h-screen flex items-center justify-center">
+    <div className="relative min-h-screen flex items-center justify-center bg-gray-900">
       <div className="absolute inset-0" ref={mountRef}>
         <Planet />
       </div>
-      <div className="relative z-10 max-w-md w-full space-y-8 bg-black bg-opacity-70 p-8 rounded-lg shadow-lg">
+      <div className="relative z-10 max-w-md w-full space-y-8 bg-black bg-opacity-80 p-8 rounded-lg shadow-lg">
         <h2 className="text-3xl font-bold text-white text-center">Contáctanos</h2>
         <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
-        <div>
-                    <label className="block text-gray-700 text-sm font-semibold mb-2" htmlFor="name">
-                        Nombre
-                    </label>
-                    <input
-                        {...register('name', { required: 'Este campo es requerido' })}
-                        className="w-full px-3 py-2 text-gray-700 border rounded-lg focus:outline-none focus:border-[#4f46e5] focus:ring focus:ring-[#4f46e5] focus:ring-opacity-50"
-                        id="name"
-                        type="text"
-                        placeholder="Tu nombre"
-                    />
-                    {errors.name && <p className="text-red-500 text-xs mt-1">{errors.name.message}</p>}
-                </div>
-                <div>
-                    <label className="block text-gray-700 text-sm font-semibold mb-2" htmlFor="email">
-                        Correo Electrónico
-                    </label>
-                    <input
-                        {...register('email', {
-                            required: 'Este campo es requerido',
-                            pattern: { value: /^\S+@\S+$/i, message: 'Correo electrónico inválido' }
-                        })}
-                        className="w-full px-3 py-2 text-gray-700 border rounded-lg focus:outline-none focus:border-[#4f46e5] focus:ring focus:ring-[#4f46e5] focus:ring-opacity-50"
-                        id="email"
-                        type="email"
-                        placeholder="tu@email.com"
-                    />
-                    {errors.email && <p className="text-red-500 text-xs mt-1">{errors.email.message}</p>}
-                </div>
-                <div>
-                    <label className="block text-gray-700 text-sm font-semibold mb-2" htmlFor="message">
-                        Mensaje
-                    </label>
-                    <textarea
-                        {...register('message', { required: 'Este campo es requerido' })}
-                        className="w-full px-3 py-2 text-gray-700 border rounded-lg focus:outline-none focus:border-[#4f46e5] focus:ring focus:ring-[#4f46e5] focus:ring-opacity-50 h-32 resize-none"
-                        id="message"
-                        placeholder="¿En qué podemos ayudarte?"
-                    />
-                    {errors.message && <p className="text-red-500 text-xs mt-1">{errors.message.message}</p>}
-                </div>
-                <div>
-                    <button
-                        className="w-full bg-[#4f46e5] hover:bg-[#4338ca] text-white font-bold py-2 px-4 rounded-lg focus:outline-none focus:shadow-outline transition duration-300 ease-in-out transform hover:scale-105 disabled:bg-gray-400 disabled:transform-none"
-                        type="submit"
-                        disabled={status.type === 'loading'}
-                    >
-                        {status.type === 'loading' ? 'Enviando...' : 'Enviar Mensaje'}
-                    </button>
-                </div>
+          <div>
+            <label className="block text-white text-sm font-semibold mb-2" htmlFor="name">
+              Nombre
+            </label>
+            <input
+              {...register('name', { required: 'Este campo es requerido' })}
+              className="w-full px-3 py-2 text-gray-900 border rounded-lg focus:outline-none focus:border-[#4f46e5] focus:ring focus:ring-[#4f46e5] focus:ring-opacity-50"
+              id="name"
+              type="text"
+              placeholder="Tu nombre"
+            />
+            {errors.name && <p className="text-red-500 text-xs mt-1">{errors.name.message}</p>}
+          </div>
+          <div>
+            <label className="block text-white text-sm font-semibold mb-2" htmlFor="email">
+              Correo Electrónico
+            </label>
+            <input
+              {...register('email', {
+                required: 'Este campo es requerido',
+                pattern: { value: /^\S+@\S+$/i, message: 'Correo electrónico inválido' }
+              })}
+              className="w-full px-3 py-2 text-gray-900 border rounded-lg focus:outline-none focus:border-[#4f46e5] focus:ring focus:ring-[#4f46e5] focus:ring-opacity-50"
+              id="email"
+              type="email"
+              placeholder="tu@email.com"
+            />
+            {errors.email && <p className="text-red-500 text-xs mt-1">{errors.email.message}</p>}
+          </div>
+          <div>
+            <label className="block text-white text-sm font-semibold mb-2" htmlFor="message">
+              Mensaje
+            </label>
+            <textarea
+              {...register('message', { required: 'Este campo es requerido' })}
+              className="w-full px-3 py-2 text-gray-900 border rounded-lg focus:outline-none focus:border-[#4f46e5] focus:ring focus:ring-[#4f46e5] focus:ring-opacity-50 h-32 resize-none"
+              id="message"
+              placeholder="¿En qué podemos ayudarte?"
+            />
+            {errors.message && <p className="text-red-500 text-xs mt-1">{errors.message.message}</p>}
+          </div>
+          <div>
+            <button
+              className="w-full bg-[#3a4e7a] hover:bg-[#3a4e7a] text-white font-bold py-2 px-4 rounded-lg focus:outline-none focus:shadow-outline transition duration-300 ease-in-out transform hover:scale-105 disabled:bg-gray-400 disabled:transform-none"
+              type="submit"
+              disabled={status.type === 'loading'}
+            >
+              {status.type === 'loading' ? 'Enviando...' : 'Enviar Mensaje'}
+            </button>
+          </div>
         </form>
         {status.message && (
           <div className={`p-4 rounded-lg text-center text-white ${

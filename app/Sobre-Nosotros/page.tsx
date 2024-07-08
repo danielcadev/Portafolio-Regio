@@ -1,5 +1,5 @@
 "use client";
-import Navbar from '../MainPage/navbar';
+import Navbar from '../components/Navbar/Navbar';
 import Parallax from '../components/About-Us/Parallax';
 import AboutUsContent from './AboutUsContent';
 

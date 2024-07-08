@@ -1,4 +1,3 @@
-// Model.tsx
 import React, { useRef, useEffect } from 'react';
 import { useFrame } from '@react-three/fiber';
 import * as THREE from 'three';
@@ -38,7 +37,8 @@ const Model: React.FC<ModelProps> = ({ path, scale, position, rotation }) => {
       if (path === "/earth3.glb") {
         ref.current.rotation.y += delta * 0.1;
       } else if (path === "/moon.glb") {
-        const earthPosition = new THREE.Vector3(4, 0, 0);
+        // Ajustamos la posición de la luna tomando en cuenta la posición inicial
+        const earthPosition = new THREE.Vector3(position[0], position[1], position[2]);
         const moonOrbitRadius = 2;
         const moonOrbitSpeed = 0.5;
         ref.current.position.x = earthPosition.x + moonOrbitRadius * Math.cos(state.clock.elapsedTime * moonOrbitSpeed);

@@ -30,7 +30,7 @@ const SpaceTeamSection: React.FC = () => {
 
   return (
     <div className="relative min-h-screen overflow-hidden">
-      <div className="absolute inset-0 bg-cover bg-center" style={{ backgroundImage: "url('/Parallax/sky.jpg')" }}>
+      <div className="absolute inset-0 bg-cover bg-center" style={{ backgroundImage: "url('/Parallax/skydown.jpg')" }}>
         <Stars />
       </div>
 
