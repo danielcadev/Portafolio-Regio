@@ -31,12 +31,14 @@ export default function Navbar() {
         isScrolled ? "bg-black bg-opacity-90 shadow-lg" : "bg-transparent"
       }`}
     >
-      <div className="w-full px-4 sm:px-6 lg:px-8 flex items-center justify-center">
-        <div className="flex items-center space-x-4">
+      <div className="w-full px-4 sm:px-6 lg:px-8 flex items-center justify-between">
+
+        <div className="hidden md:flex items-center space-x-4">
           <NavbarLinks />
         </div>
         <button
-          className="md:hidden text-white text-2xl absolute right-4"
+          className="md:hidden text-white text-2xl"
+          style={{ zIndex: 51 }} // Asegura que el botón de menú tenga un z-index alto
           onClick={toggleMobileMenu}
         >
           &#9776; {/* Icono de menú (hamburguesa) */}

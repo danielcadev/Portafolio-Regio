@@ -15,7 +15,7 @@ const projects: Project[] = [
     title: "Mitiquete",
     description: "Web hecha para dar servicio de turismo a cualquier parte del mundo.",
     imageUrl: "/IMG_Proyectos/MiTiquete.jpg",
-    link: "https:/mitiquete.com",
+    link: "https://mitiquete.com",
   },
   {
     title: "Conociendo Colombia",
