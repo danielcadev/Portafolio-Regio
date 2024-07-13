@@ -45,8 +45,8 @@ export default function Hero() {
       <main className="w-full h-full flex items-center justify-center p-4 sm:p-10 md:p-20 lg:p-24 overflow-hidden relative">
         <div className="hero-container flex flex-col justify-center items-center w-full p-4 sm:p-8 z-10 text-center lg:text-center">
           <div className="hero-text w-full space-y-4 sm:space-y-8">
-            <h1 className="text-3xl sm:text-5xl font-extrabold text-white">Hola, somos dos jóvenes</h1>
-            <p className="text-sm sm:text-lg text-white">Nos apasiona crear experiencias web fluidas y atractivas...</p>
+            <h1 className="text-3xl sm:text-5xl font-extrabold text-white">Hola, somos tres jóvenes</h1>
+            <p className="text-sm sm:text-lg text-white">Nos apasiona crear experiencias web y aplicacionesfluidas y atractivas...</p>
             <div className="hero-icons flex justify-center space-x-2 sm:space-x-4 mt-4">
               {socialLinks.map((link, index) => (
                 <motion.a

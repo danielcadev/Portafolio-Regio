@@ -31,18 +31,19 @@ export default function Navbar() {
         isScrolled ? "bg-black bg-opacity-90 shadow-lg" : "bg-transparent"
       }`}
     >
-      <div className="w-full px-4 sm:px-6 lg:px-8 flex items-center justify-between">
-
-        <div className="hidden md:flex items-center space-x-4">
-          <NavbarLinks />
+      <div className="w-full px-4 sm:px-6 lg:px-8 flex items-center justify-center">
+        <div className="flex items-center justify-between w-full max-w-screen-xl">
+          <div className="hidden md:flex items-center space-x-4 mx-auto">
+            <NavbarLinks />
+          </div>
+          <button
+            className="md:hidden text-white text-2xl"
+            style={{ zIndex: 51 }} // Asegura que el botón de menú tenga un z-index alto
+            onClick={toggleMobileMenu}
+          >
+            &#9776; {/* Icono de menú (hamburguesa) */}
+          </button>
         </div>
-        <button
-          className="md:hidden text-white text-2xl"
-          style={{ zIndex: 51 }} // Asegura que el botón de menú tenga un z-index alto
-          onClick={toggleMobileMenu}
-        >
-          &#9776; {/* Icono de menú (hamburguesa) */}
-        </button>
       </div>
       {isMobileMenuOpen && <MobileMenu />}
     </nav>
