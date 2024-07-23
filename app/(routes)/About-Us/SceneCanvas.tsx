@@ -36,7 +36,12 @@ export default function SceneCanvas() {
   const [webGLSupported, setWebGLSupported] = useState(true);
 
   useEffect(() => {
-    setWebGLSupported(checkWebGLSupport());
+    const isSupported = checkWebGLSupport();
+    setWebGLSupported(isSupported);
+    if (!isSupported) {
+      // Aquí podrías enviar un evento de análisis o informar al componente padre
+      console.log("WebGL no está soportado en este dispositivo");
+    }
   }, []);
 
   
@@ -53,7 +58,12 @@ export default function SceneCanvas() {
   }), [isMobile]);
 
   if (!webGLSupported) {
-    return null; // No renderiza nada si WebGL no está soportado
+    return (
+      <div className="webgl-not-supported">
+        <p>Lo sentimos, su dispositivo no soporta WebGL.</p>
+        <p>No se puede mostrar el contenido 3D en este momento.</p>
+      </div>
+    );
   }
 
   return (

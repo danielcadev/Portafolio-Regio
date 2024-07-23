@@ -36,10 +36,10 @@ export default function Hero() {
       <main className="relative z-10 flex items-center justify-center w-full h-full p-4 sm:p-10">
         <div className="text-center space-y-6">
           <h1 className="text-3xl sm:text-5xl font-extrabold text-white">
-            Hola, somos tres jóvenes
+            Hola, somos cuatro jóvenes
           </h1>
           <p className="text-sm sm:text-lg text-white max-w-2xl mx-auto">
-            Nos apasiona crear experiencias web y aplicaciones fluidas y atractivas...
+            Nos apasiona crear paginas web, banners, videos, aplicaciones fluidas y atractivas...
           </p>
           
           <div className="flex justify-center space-x-4">
