@@ -9,7 +9,7 @@ const AboutUsContent: React.FC = () => {
       <AboutUs />
     </div>
 
-      <SpaceTeamSection />
+    
    
   </div>
   );
