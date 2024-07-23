@@ -1,21 +1,12 @@
 // components/SpaceTeamSection.tsx
 'use client';
 
-import React from 'react';
 import Image from 'next/image';
-import dynamic from 'next/dynamic';
+import Stars from './Stars';
 import TeamCard from './TeamCard';
 import { motion } from 'framer-motion';
-import { useWebGLSupport } from './useWebGLSupport';
-
-const Stars = dynamic(() => import('./Stars'), {
-  ssr: false,
-  loading: () => <div>Cargando estrellas...</div>
-});
 
 const SpaceTeamSection: React.FC = () => {
-  const webGLSupported = useWebGLSupport();
-
   const teamMembers = [
     { 
       name: "Daniel Castrillon", 
@@ -40,11 +31,7 @@ const SpaceTeamSection: React.FC = () => {
   return (
     <div className="relative min-h-screen overflow-hidden">
       <div className="absolute inset-0 bg-cover bg-center" style={{ backgroundImage: "url('/Parallax/skydown.jpg')" }}>
-        {webGLSupported ? (
-          <Stars />
-        ) : (
-          <div className="absolute inset-0 bg-black opacity-50" />
-        )}
+        <Stars />
       </div>
 
       {/* Content */}
