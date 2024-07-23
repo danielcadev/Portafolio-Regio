@@ -7,7 +7,7 @@ import { EffectComposer, Bloom, Noise, Vignette } from '@react-three/postprocess
 import * as THREE from 'three';
 import dynamic from 'next/dynamic';
 import { useModel3DResponsive } from '@/hooks/useModel3DResponsive';
-import { isWebGLAvailable } from '@/utils/webglDetector';
+import { detectWebGLContext } from '@/utils/webglDetector';
 
 const Model = dynamic(() => import('../../components/3DModels/ModelAboutUs'), { ssr: false });
 
@@ -21,10 +21,15 @@ interface ModelScale {
 
 export default function SceneCanvas() {
   const isMobile = useModel3DResponsive();
-  const [webGLSupported, setWebGLSupported] = useState<boolean | null>(null);
+  const [webGLSupport, setWebGLSupport] = useState<'webgl2' | 'webgl' | null | 'error'>(null);
 
   useEffect(() => {
-    setWebGLSupported(isWebGLAvailable());
+    try {
+      setWebGLSupport(detectWebGLContext());
+    } catch (error) {
+      console.error("Error detecting WebGL:", error);
+      setWebGLSupport('error');
+    }
   }, []);
 
   const modelPositions: ModelPosition = useMemo(() => ({
@@ -37,14 +42,15 @@ export default function SceneCanvas() {
     earth: isMobile ? [0.09, 0.09, 0.09] : [0.1, 0.1, 0.1],
   }), [isMobile]);
 
-  if (webGLSupported === null) {
+  if (webGLSupport === null) {
     return <div>Verificando soporte de WebGL...</div>;
   }
 
-  if (!webGLSupported) {
+  if (webGLSupport === 'error' || !webGLSupport) {
     return (
       <div className="webgl-not-supported">
-        Lo sentimos, tu navegador no soporta WebGL. No se pueden mostrar los modelos 3D.
+        Lo sentimos, tu navegador o hardware no soporta WebGL. 
+        No se pueden mostrar los modelos 3D.
       </div>
     );
   }
@@ -54,6 +60,9 @@ export default function SceneCanvas() {
       camera={{ position: isMobile ? [0, 3, 10] : [0, 3, 7], fov: isMobile ? 75 : 60 }}
       className="absolute inset-0 z-0"
       aria-label="3D scene with astronaut, Earth, and Moon"
+      onCreated={({ gl }) => {
+        gl.setClearColor(new THREE.Color('#000000'));
+      }}
     >
       <ambientLight intensity={0.5} />
       <directionalLight position={[5, 5, 5]} intensity={1} />
