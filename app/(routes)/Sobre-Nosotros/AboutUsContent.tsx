@@ -1,6 +1,6 @@
 // components/AboutUsContent.tsx
-import AboutUs from "../components/About-Us/AboutUs"
-import SpaceTeamSection from '../components/About-Us/SpaceSection';
+import AboutUs from "../About-Us/AboutUs"
+import SpaceTeamSection from '../About-Us/SpaceSection';
 
 const AboutUsContent: React.FC = () => {
   return (

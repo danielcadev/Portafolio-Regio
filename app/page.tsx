@@ -1,8 +1,6 @@
 import SmoothScroll from './components/SmoothScroll';
-import Navbar from './components/Navbar/Navbar';
-import Footer from './MainPage/footer';
-import Hero from './MainPage/hero';
-import Skills from './MainPage/grid';
+import Hero from './(routes)/MainPage/components/Hero';
+import Skills from './(routes)/MainPage/components/Grid';
 
 
 export default function MainPage() {
@@ -16,7 +14,6 @@ export default function MainPage() {
       autoResize: true,
     }}>
       <div className="flex flex-col min-h-screen">
-        <Navbar />
         <main className="flex-grow">
           <Hero />
           <div className="container mx-auto py-16 px-4 space-y-16">
@@ -26,7 +23,6 @@ export default function MainPage() {
           
           </div>
         </main>
-        <Footer />
       </div>
     </SmoothScroll>
   );

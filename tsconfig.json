@@ -26,8 +26,8 @@
     "**/*.ts",
     "**/*.tsx",
     ".next/types/**/*.ts",
-    "app/MainPage/skills.tsx",
-    "app/Sobre-Nosotros/3dcharater.tsx"
-  ],
+    "app/(routes)/MainPage/skills.tsx",
+    "app/(routes)/Sobre-Nosotros/3dcharater.tsx"
+, "app/components/Layout/Navbar"  ],
   "exclude": ["node_modules"]
 }

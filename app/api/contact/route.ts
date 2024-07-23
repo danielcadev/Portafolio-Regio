@@ -1,7 +1,7 @@
 import nodemailer from 'nodemailer';
+import { NextRequest, NextResponse } from 'next/server';
 
-export async function POST(request) {
-  if (request.method === 'POST') {
+export async function POST(request: NextRequest) {
     const { name, email, message } = await request.json();
 
     // Verifica las variables de entorno
@@ -40,22 +40,9 @@ export async function POST(request) {
     try {
       const info = await transporter.sendMail(mailOptions);
       console.log('Mensaje enviado:', info.response);
-      return new Response(JSON.stringify({ message: 'Mensaje enviado con éxito', info: info.response }), {
-        status: 200,
-        headers: { 'Content-Type': 'application/json' }
-      });
+      return NextResponse.json({ message: 'Mensaje enviado con éxito' }, { status: 200 });
     } catch (error) {
       console.error('Error al enviar el correo:', error);
-      console.error('Detalles adicionales:', error.response || error.message);
-      return new Response(JSON.stringify({ 
-        error: 'Error al enviar el correo', 
-        details: error.response || error.message 
-      }), {
-        status: 500,
-        headers: { 'Content-Type': 'application/json' }
-      });
+      return NextResponse.json({ error: 'Error al enviar el correo' }, { status: 500 });
     }
-  } else {
-    return new Response('Método no permitido', { status: 405 });
-  }
 }
