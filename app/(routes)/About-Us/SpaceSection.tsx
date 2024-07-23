@@ -1,11 +1,12 @@
 // components/SpaceTeamSection.tsx
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import Image from 'next/image';
 import dynamic from 'next/dynamic';
 import TeamCard from './TeamCard';
 import { motion } from 'framer-motion';
+import { useWebGLSupport } from './useWebGLSupport';
 
 const Stars = dynamic(() => import('./Stars'), {
   ssr: false,
@@ -13,21 +14,7 @@ const Stars = dynamic(() => import('./Stars'), {
 });
 
 const SpaceTeamSection: React.FC = () => {
-  const [showStars, setShowStars] = useState(true);
-
-  useEffect(() => {
-    const handleError = (event: ErrorEvent) => {
-      if (event.message.includes('WebGL') || event.message.includes('THREE.WebGLRenderer')) {
-        setShowStars(false);
-      }
-    };
-
-    window.addEventListener('error', handleError);
-
-    return () => {
-      window.removeEventListener('error', handleError);
-    };
-  }, []);
+  const webGLSupported = useWebGLSupport();
 
   const teamMembers = [
     { 
@@ -53,7 +40,11 @@ const SpaceTeamSection: React.FC = () => {
   return (
     <div className="relative min-h-screen overflow-hidden">
       <div className="absolute inset-0 bg-cover bg-center" style={{ backgroundImage: "url('/Parallax/skydown.jpg')" }}>
-        {showStars && <Stars />}
+        {webGLSupported ? (
+          <Stars />
+        ) : (
+          <div className="absolute inset-0 bg-black opacity-50" />
+        )}
       </div>
 
       {/* Content */}
