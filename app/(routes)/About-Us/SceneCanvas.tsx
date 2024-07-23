@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect, useMemo, Suspense } from 'react';
+import React, { useEffect, useMemo, Suspense, useState } from 'react';
 import { Canvas } from '@react-three/fiber';
 import { Stars, Preload, OrbitControls } from '@react-three/drei';
 import { EffectComposer, Bloom, Noise, Vignette } from '@react-three/postprocessing';
@@ -11,6 +11,8 @@ import { useModel3DResponsive  } from '@/hooks/useModel3DResponsive'; // Custom 
 
 const Model = dynamic(() => import('../../components/3DModels/ModelAboutUs'), { ssr: false });
 
+
+
 interface ModelPosition {
   [key: string]: [number, number, number];
 }
@@ -19,9 +21,25 @@ interface ModelScale {
   [key: string]: [number, number, number];
 }
 
+function checkWebGLSupport(): boolean {
+  if (typeof window === 'undefined') return false; // Server-side check
+  try {
+    const canvas = document.createElement('canvas');
+    return !!(window.WebGLRenderingContext && (canvas.getContext('webgl') || canvas.getContext('experimental-webgl')));
+  } catch (e) {
+    return false;
+  }
+}
+
 export default function SceneCanvas() {
   const isMobile = useModel3DResponsive();
+  const [webGLSupported, setWebGLSupported] = useState(true);
 
+  useEffect(() => {
+    setWebGLSupported(checkWebGLSupport());
+  }, []);
+
+  
   const modelPositions: ModelPosition = useMemo(() => ({
     astro: isMobile ? [-1, 2, -1] : [-5, 0, 0],
     earth: isMobile ? [1, 2, 0] : [4.1, 1.5, 0],
@@ -33,6 +51,10 @@ export default function SceneCanvas() {
     earth: isMobile ? [0.09, 0.09, 0.09] : [0.1, 0.1, 0.1],
     moon: isMobile ? [0.04, 0.04, 0.04] : [0.04, 0.04, 0.04],
   }), [isMobile]);
+
+  if (!webGLSupported) {
+    return null; // No renderiza nada si WebGL no está soportado
+  }
 
   return (
       <Canvas 
