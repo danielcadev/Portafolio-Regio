@@ -1,12 +1,34 @@
 // components/SpaceTeamSection.tsx
 'use client';
 
+import React, { useState, useEffect } from 'react';
 import Image from 'next/image';
-import Stars from './Stars';
+import dynamic from 'next/dynamic';
 import TeamCard from './TeamCard';
 import { motion } from 'framer-motion';
 
+const Stars = dynamic(() => import('./Stars'), {
+  ssr: false,
+  loading: () => <div>Cargando estrellas...</div>
+});
+
 const SpaceTeamSection: React.FC = () => {
+  const [showStars, setShowStars] = useState(true);
+
+  useEffect(() => {
+    const handleError = (event: ErrorEvent) => {
+      if (event.message.includes('WebGL') || event.message.includes('THREE.WebGLRenderer')) {
+        setShowStars(false);
+      }
+    };
+
+    window.addEventListener('error', handleError);
+
+    return () => {
+      window.removeEventListener('error', handleError);
+    };
+  }, []);
+
   const teamMembers = [
     { 
       name: "Daniel Castrillon", 
@@ -31,7 +53,7 @@ const SpaceTeamSection: React.FC = () => {
   return (
     <div className="relative min-h-screen overflow-hidden">
       <div className="absolute inset-0 bg-cover bg-center" style={{ backgroundImage: "url('/Parallax/skydown.jpg')" }}>
-        <Stars />
+        {showStars && <Stars />}
       </div>
 
       {/* Content */}
