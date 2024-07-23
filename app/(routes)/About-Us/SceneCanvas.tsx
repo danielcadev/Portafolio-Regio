@@ -7,7 +7,7 @@ import { EffectComposer, Bloom, Noise, Vignette } from '@react-three/postprocess
 import * as THREE from 'three';
 import dynamic from 'next/dynamic';
 import { useModel3DResponsive  } from '@/hooks/useModel3DResponsive'; // Custom hook
-
+import WebGLFallback from './WebGLFallback';
 
 const Model = dynamic(() => import('../../components/3DModels/ModelAboutUs'), { ssr: false });
 
@@ -22,7 +22,7 @@ interface ModelScale {
 }
 
 function checkWebGLSupport(): boolean {
-  if (typeof window === 'undefined') return false; // Server-side check
+  if (typeof window === 'undefined') return false;
   try {
     const canvas = document.createElement('canvas');
     return !!(window.WebGLRenderingContext && (canvas.getContext('webgl') || canvas.getContext('experimental-webgl')));
@@ -35,13 +35,9 @@ export default function SceneCanvas() {
   const isMobile = useModel3DResponsive();
   const [webGLSupported, setWebGLSupported] = useState(true);
 
+  
   useEffect(() => {
-    const isSupported = checkWebGLSupport();
-    setWebGLSupported(isSupported);
-    if (!isSupported) {
-      // Aquí podrías enviar un evento de análisis o informar al componente padre
-      console.log("WebGL no está soportado en este dispositivo");
-    }
+    setWebGLSupported(checkWebGLSupport());
   }, []);
 
   
@@ -58,12 +54,7 @@ export default function SceneCanvas() {
   }), [isMobile]);
 
   if (!webGLSupported) {
-    return (
-      <div className="webgl-not-supported">
-        <p>Lo sentimos, su dispositivo no soporta WebGL.</p>
-        <p>No se puede mostrar el contenido 3D en este momento.</p>
-      </div>
-    );
+    return <WebGLFallback />;
   }
 
   return (
