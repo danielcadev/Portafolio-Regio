@@ -1,9 +1,9 @@
 "use client"
-
-import React, { useRef, useMemo } from 'react';
+import React, { useRef, useMemo, useState, useEffect } from 'react';
 import { Canvas, useFrame } from '@react-three/fiber';
 import { Points, PointMaterial } from '@react-three/drei';
 import * as THREE from 'three';
+import ErrorBoundary from '../../components/ErrorBoundary';
 
 const generateStarField = (numStars: number, spread: number) => {
   const positions = new Float32Array(numStars * 3);
@@ -54,14 +54,39 @@ const StarsCanvas: React.FC = () => {
   );
 };
 
+const DynamicCanvas: React.FC = () => (
+  <Canvas camera={{ position: [0, 0, 50], fov: 60 }}>
+    <StarsCanvas />
+  </Canvas>
+);
+
 const Stars: React.FC = () => {
+  const [isClient, setIsClient] = useState(false);
+
+  useEffect(() => {
+    setIsClient(true);
+  }, []);
+
+  if (!isClient) {
+    return null; // or a loading indicator
+  }
+
   return (
-    <div className="absolute inset-0">
-      <Canvas camera={{ position: [0, 0, 50], fov: 60 }}>
-        <StarsCanvas />
-      </Canvas>
-    </div>
+    <ErrorBoundary fallback={<WebGLNotSupported />}>
+      <div className="absolute inset-0">
+        <DynamicCanvas />
+      </div>
+    </ErrorBoundary>
   );
 };
+
+function WebGLNotSupported() {
+  return (
+    <div className="webgl-not-supported">
+      Lo sentimos, tu navegador o hardware no soporta WebGL. 
+      No se pueden mostrar las estrellas.
+    </div>
+  );
+}
 
 export default Stars;
