@@ -1,13 +1,12 @@
 "use client";
 
 import React, { useEffect, useMemo, Suspense, useState } from 'react';
-import { Canvas } from '@react-three/fiber';
-import { Stars, Preload, OrbitControls } from '@react-three/drei';
-import { EffectComposer, Bloom, Noise, Vignette } from '@react-three/postprocessing';
-import * as THREE from 'three';
 import dynamic from 'next/dynamic';
+import { Canvas } from '@react-three/fiber';
+import { Stars, Preload } from '@react-three/drei';
+import { EffectComposer, Bloom, Noise, Vignette } from '@react-three/postprocessing';
 import { useModel3DResponsive } from '@/hooks/useModel3DResponsive';
-import { detectWebGLContext } from '@/utils/webglDetector';
+import ErrorBoundary from '../../components/ErrorBoundary';
 
 const Model = dynamic(() => import('../../components/3DModels/ModelAboutUs'), { ssr: false });
 
@@ -19,50 +18,29 @@ interface ModelScale {
   [key: string]: [number, number, number];
 }
 
-export default function SceneCanvas() {
-  const isMobile = useModel3DResponsive();
-  const [webGLSupport, setWebGLSupport] = useState<'webgl2' | 'webgl' | null | 'error'>(null);
+function WebGLNotSupported() {
+  return (
+    <div className="webgl-not-supported">
+      Lo sentimos, tu navegador o hardware no soporta WebGL. 
+      No se pueden mostrar los modelos 3D.
+    </div>
+  );
+}
 
-  useEffect(() => {
-    try {
-      setWebGLSupport(detectWebGLContext());
-    } catch (error) {
-      console.error("Error detecting WebGL:", error);
-      setWebGLSupport('error');
-    }
-  }, []);
+function LoadingFallback() {
+  return <span className="text-white">Loading 3D models...</span>;
+}
 
-  const modelPositions: ModelPosition = useMemo(() => ({
-    astro: isMobile ? [-1, 2, -1] : [-5, 0, 0],
-    earth: isMobile ? [1, 2, 0] : [4.1, 1.5, 0],
-  }), [isMobile]);
-
-  const modelScales: ModelScale = useMemo(() => ({
-    astro: isMobile ? [1.2, 1.2, 1.2] : [1, 1, 1],
-    earth: isMobile ? [0.09, 0.09, 0.09] : [0.1, 0.1, 0.1],
-  }), [isMobile]);
-
-  if (webGLSupport === null) {
-    return <div>Verificando soporte de WebGL...</div>;
-  }
-
-  if (webGLSupport === 'error' || !webGLSupport) {
-    return (
-      <div className="webgl-not-supported">
-        Lo sentimos, tu navegador o hardware no soporta WebGL. 
-        No se pueden mostrar los modelos 3D.
-      </div>
-    );
-  }
-
+function DynamicCanvas({ isMobile, modelPositions, modelScales }: { 
+  isMobile: boolean, 
+  modelPositions: ModelPosition, 
+  modelScales: ModelScale 
+}) {
   return (
     <Canvas 
       camera={{ position: isMobile ? [0, 3, 10] : [0, 3, 7], fov: isMobile ? 75 : 60 }}
       className="absolute inset-0 z-0"
       aria-label="3D scene with astronaut, Earth, and Moon"
-      onCreated={({ gl }) => {
-        gl.setClearColor(new THREE.Color('#000000'));
-      }}
     >
       <ambientLight intensity={0.5} />
       <directionalLight position={[5, 5, 5]} intensity={1} />
@@ -81,6 +59,35 @@ export default function SceneCanvas() {
   );
 }
 
-function LoadingFallback() {
-  return <span className="text-white">Loading 3D models...</span>;
+export default function SceneCanvas() {
+  const isMobile = useModel3DResponsive();
+  const [isClient, setIsClient] = useState(false);
+
+  useEffect(() => {
+    setIsClient(true);
+  }, []);
+
+  const modelPositions: ModelPosition = useMemo(() => ({
+    astro: isMobile ? [-1, 2, -1] : [-5, 0, 0],
+    earth: isMobile ? [1, 2, 0] : [4.1, 1.5, 0],
+  }), [isMobile]);
+
+  const modelScales: ModelScale = useMemo(() => ({
+    astro: isMobile ? [1.2, 1.2, 1.2] : [1, 1, 1],
+    earth: isMobile ? [0.09, 0.09, 0.09] : [0.1, 0.1, 0.1],
+  }), [isMobile]);
+
+  if (!isClient) {
+    return null; // or a loading indicator
+  }
+
+  return (
+    <ErrorBoundary fallback={<WebGLNotSupported />}>
+      <DynamicCanvas
+        isMobile={isMobile}
+        modelPositions={modelPositions}
+        modelScales={modelScales}
+      />
+    </ErrorBoundary>
+  );
 }
