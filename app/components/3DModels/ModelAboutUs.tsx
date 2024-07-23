@@ -1,10 +1,11 @@
 "use client"
 
 import React, { useRef } from 'react';
-import { useFrame, useLoader } from '@react-three/fiber';
+import { useFrame, useThree, useLoader } from '@react-three/fiber';
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
+import { KTX2Loader } from 'three/examples/jsm/loaders/KTX2Loader.js';
 import { DRACOLoader } from 'three/examples/jsm/loaders/DRACOLoader.js';
-import * as THREE from 'three';
+import * as THREE from 'three';;
 
 interface ModelProps {
   path: string;
@@ -20,14 +21,22 @@ export default function ModelAbout({
   rotation = [0, 0, 0] 
 }: ModelProps) {
   const ref = useRef<THREE.Group>(null);
+  const { gl } = useThree();
 
   const gltf = useLoader(GLTFLoader, path, (loader) => {
+    // Configurar KTX2Loader
+    const ktx2Loader = new KTX2Loader()
+      .setTranscoderPath('/basis/') 
+      .detectSupport(gl);
+    loader.setKTX2Loader(ktx2Loader);
+
+    // Configurar DRACOLoader
     const dracoLoader = new DRACOLoader();
-    dracoLoader.setDecoderPath('/draco/');
+    dracoLoader.setDecoderPath('/draco/'); 
     loader.setDRACOLoader(dracoLoader);
 
-    // No necesitamos configurar explícitamente el TextureLoader
-    // Three.js y react-three-fiber manejarán automáticamente las texturas WebP
+    // Si necesitas MeshoptDecoder, descomenta la siguiente línea:
+    // loader.setMeshoptDecoder(MeshoptDecoder);
   });
 
   useFrame((_, delta) => {

@@ -58,7 +58,7 @@ export default function Hero() {
           </div>
           
           <div className="flex flex-col sm:flex-row justify-center space-y-2 sm:space-y-0 sm:space-x-4">
-            <Link href="/proyectos" passHref>
+            <Link href="/Proyectos" passHref>
               <motion.button
                 whileHover={{ scale: 1.05 }}
                 className="px-6 py-3 text-lg font-bold text-white bg-indigo-600 rounded-full hover:bg-indigo-700 transition-colors"
@@ -66,7 +66,7 @@ export default function Hero() {
                 Ver nuestros proyectos
               </motion.button>
             </Link>
-            <Link href="/sobre-nosotros" passHref>
+            <Link href="/Sobre-Nosotros" passHref>
               <motion.button
                 whileHover={{ scale: 1.05 }}
                 className="px-6 py-3 text-lg font-bold text-indigo-600 border-2 border-indigo-600 rounded-full hover:bg-indigo-600 hover:text-white transition-colors"

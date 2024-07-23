@@ -46,8 +46,8 @@ function DynamicCanvas({ isMobile, modelPositions, modelScales }: {
       <directionalLight position={[5, 5, 5]} intensity={1} />
       <Stars radius={100} depth={50} count={5000} factor={4} saturation={0} fade speed={1} />
       <Suspense fallback={<LoadingFallback />}>
-        <Model path="/astro2.glb" position={modelPositions.astro} scale={modelScales.astro} />
-        <Model path="/earth2.glb" position={modelPositions.earth} scale={modelScales.earth} />
+        <Model path="/astro1.glb" position={modelPositions.astro} scale={modelScales.astro} />
+        <Model path="/earth3.glb" position={modelPositions.earth} scale={modelScales.earth} />
       </Suspense>
       <EffectComposer>
         <Bloom luminanceThreshold={0.2} luminanceSmoothing={0.9} height={300} intensity={1.5} />
