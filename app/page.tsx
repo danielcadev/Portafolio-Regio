@@ -1,6 +1,6 @@
-import SmoothScroll from './components/SmoothScroll';
-import Hero from './(routes)/MainPage/components/Hero';
-import Skills from './(routes)/MainPage/components/Grid';
+import SmoothScroll from './components/Layout/SmoothScroll';
+import Hero from './components/MainPage/Hero';
+import Skills from './components/MainPage/Grid';
 
 
 export default function MainPage() {

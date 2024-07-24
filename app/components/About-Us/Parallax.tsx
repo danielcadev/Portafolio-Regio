@@ -1,3 +1,4 @@
+// components/Parallax.tsx
 import { useEffect, useRef, ReactNode } from 'react';
 import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';

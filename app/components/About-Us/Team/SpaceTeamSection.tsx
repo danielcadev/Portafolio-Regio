@@ -2,7 +2,7 @@
 'use client';
 
 import Image from 'next/image';
-import Stars from './Stars';
+import Stars from '../Scene/SceneStars';
 import TeamCard from './TeamCard';
 import { motion } from 'framer-motion';
 

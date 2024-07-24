@@ -1,4 +1,4 @@
-import ProjectCard from './ProjectCard';
+import ProjectCard from '../../components/Proyects/ProjectCard';
 import Navbar from '../../components/Layout/Navbar/Navbar';
 
 

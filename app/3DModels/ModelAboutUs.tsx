@@ -1,11 +1,11 @@
-"use client"
+"use client";
 
-import React, { useRef } from 'react';
+import React, { useRef, useCallback } from 'react';
 import { useFrame, useThree, useLoader } from '@react-three/fiber';
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
 import { KTX2Loader } from 'three/examples/jsm/loaders/KTX2Loader.js';
 import { DRACOLoader } from 'three/examples/jsm/loaders/DRACOLoader.js';
-import * as THREE from 'three';;
+import * as THREE from 'three';
 
 interface ModelProps {
   path: string;
@@ -23,21 +23,21 @@ export default function ModelAbout({
   const ref = useRef<THREE.Group>(null);
   const { gl } = useThree();
 
-  const gltf = useLoader(GLTFLoader, path, (loader) => {
-    // Configurar KTX2Loader
+  const loadModel = useCallback((loader: GLTFLoader) => {
     const ktx2Loader = new KTX2Loader()
       .setTranscoderPath('/basis/') 
       .detectSupport(gl);
     loader.setKTX2Loader(ktx2Loader);
 
-    // Configurar DRACOLoader
     const dracoLoader = new DRACOLoader();
     dracoLoader.setDecoderPath('/draco/'); 
     loader.setDRACOLoader(dracoLoader);
 
     // Si necesitas MeshoptDecoder, descomenta la siguiente línea:
     // loader.setMeshoptDecoder(MeshoptDecoder);
-  });
+  }, [gl]);
+
+  const gltf = useLoader(GLTFLoader, path, loadModel);
 
   useFrame((_, delta) => {
     if (ref.current) {

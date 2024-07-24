@@ -1,14 +1,13 @@
 "use client";
 
-import React, { useEffect, useMemo, Suspense, useState } from 'react';
+import React, { useMemo, Suspense } from 'react';
 import dynamic from 'next/dynamic';
 import { Canvas } from '@react-three/fiber';
 import { Stars, Preload } from '@react-three/drei';
 import { EffectComposer, Bloom, Noise, Vignette } from '@react-three/postprocessing';
-import { useModel3DResponsive } from '@/hooks/useModel3DResponsive';
-import ErrorBoundary from '../../components/ErrorBoundary';
+import ErrorBoundary from '../../common/ErrorBoundary';
 
-const Model = dynamic(() => import('../../components/3DModels/ModelAboutUs'), { ssr: false });
+const Model = dynamic(() => import('../../../3DModels/ModelAboutUs'), { ssr: false });
 
 interface ModelPosition {
   [key: string]: [number, number, number];
@@ -16,6 +15,10 @@ interface ModelPosition {
 
 interface ModelScale {
   [key: string]: [number, number, number];
+}
+
+interface SceneCanvasProps {
+  isMobile: boolean;
 }
 
 function WebGLNotSupported() {
@@ -28,20 +31,17 @@ function WebGLNotSupported() {
 }
 
 function LoadingFallback() {
-  return <span className="text-white">Loading 3D models...</span>;
+  return null; // O puedes retornar un objeto 3D simple como placeholder
 }
 
-function DynamicCanvas({ isMobile, modelPositions, modelScales }: { 
+function SceneContent({ modelPositions, modelScales }: { 
   isMobile: boolean, 
   modelPositions: ModelPosition, 
-  modelScales: ModelScale 
+  modelScales: ModelScale,
+  cameraPosition: [number, number, number]
 }) {
   return (
-    <Canvas 
-      camera={{ position: isMobile ? [0, 3, 10] : [0, 3, 7], fov: isMobile ? 75 : 60 }}
-      className="absolute inset-0 z-0"
-      aria-label="3D scene with astronaut, Earth, and Moon"
-    >
+    <>
       <ambientLight intensity={0.5} />
       <directionalLight position={[5, 5, 5]} intensity={1} />
       <Stars radius={100} depth={50} count={5000} factor={4} saturation={0} fade speed={1} />
@@ -55,18 +55,11 @@ function DynamicCanvas({ isMobile, modelPositions, modelScales }: {
         <Vignette eskil={false} offset={0.1} darkness={1.1} />
       </EffectComposer>
       <Preload all />
-    </Canvas>
+    </>
   );
 }
 
-export default function SceneCanvas() {
-  const isMobile = useModel3DResponsive();
-  const [isClient, setIsClient] = useState(false);
-
-  useEffect(() => {
-    setIsClient(true);
-  }, []);
-
+export default function SceneSpace({ isMobile }: SceneCanvasProps) {
   const modelPositions: ModelPosition = useMemo(() => ({
     astro: isMobile ? [-1, 2, -1] : [-5, 0, 0],
     earth: isMobile ? [1, 2, 0] : [4.1, 1.5, 0],
@@ -77,17 +70,28 @@ export default function SceneCanvas() {
     earth: isMobile ? [0.09, 0.09, 0.09] : [0.1, 0.1, 0.1],
   }), [isMobile]);
 
-  if (!isClient) {
-    return null; // or a loading indicator
-  }
+  const cameraPosition: [number, number, number] = useMemo(() => 
+    isMobile ? [0, 3, 10] : [0, 3, 7],
+  [isMobile]);
+
+  const cameraFov = useMemo(() => 
+    isMobile ? 75 : 60,
+  [isMobile]);
 
   return (
     <ErrorBoundary fallback={<WebGLNotSupported />}>
-      <DynamicCanvas
-        isMobile={isMobile}
-        modelPositions={modelPositions}
-        modelScales={modelScales}
-      />
+      <Canvas 
+        camera={{ position: cameraPosition, fov: cameraFov }}
+        className="absolute inset-0 z-0"
+        aria-label="3D scene with astronaut, Earth, and Moon"
+      >
+        <SceneContent
+          isMobile={isMobile}
+          modelPositions={modelPositions}
+          modelScales={modelScales}
+          cameraPosition={cameraPosition}
+        />
+      </Canvas>
     </ErrorBoundary>
   );
 }

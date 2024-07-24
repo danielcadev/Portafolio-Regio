@@ -1,9 +1,10 @@
+// components/Stars.tsx
 "use client"
 import React, { useRef, useMemo, useState, useEffect } from 'react';
 import { Canvas, useFrame } from '@react-three/fiber';
 import { Points, PointMaterial } from '@react-three/drei';
 import * as THREE from 'three';
-import ErrorBoundary from '../../components/ErrorBoundary';
+import ErrorBoundary from '../../common/ErrorBoundary';
 
 const generateStarField = (numStars: number, spread: number) => {
   const positions = new Float32Array(numStars * 3);

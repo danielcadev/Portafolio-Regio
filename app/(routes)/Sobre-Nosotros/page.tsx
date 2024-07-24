@@ -1,7 +1,7 @@
 "use client";
 import Navbar from '../../components/Layout/Navbar/Navbar';
-import Parallax from '../About-Us/Parallax';
-import AboutUsContent from './AboutUsContent';
+import Parallax from '../../components/About-Us/Parallax';
+import { AboutUsMain } from '@/app/components/About-Us';
 
 export default function About() {
   return (
@@ -10,7 +10,7 @@ export default function About() {
         <Navbar />
       </div>
       <Parallax>
-        <AboutUsContent />
+        <AboutUsMain />
       </Parallax>
     </div>
   );
