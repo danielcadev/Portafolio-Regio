@@ -21,9 +21,15 @@ const SpaceTeamSection: React.FC = () => {
       linkedin: "https://www.linkedin.com/in/davidcastrillon"
     },
     { 
+      name: "Laura Pertuz", 
+      title: "Diseñadora Grafica y marketing digital", 
+      description: "Realiza el diseño de las piezas graficas y se encarga del marketing digital del proyecto.",
+      linkedin: "https://www.linkedin.com/in/josephdiaz"
+    },
+    { 
       name: "Joseph Diaz", 
-      title: "Asistente Creativo", 
-      description: "Apoya en la creación de contenido visual y colabora en diversos aspectos del proyecto.",
+      title: "Programador Junior", 
+      description: "Responsable del desarrollo backend. Experto en programación y tecnologías web modernas.",
       linkedin: "https://www.linkedin.com/in/josephdiaz"
     },
   ];
