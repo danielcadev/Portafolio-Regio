@@ -19,17 +19,22 @@ const staggerChildren: Variants = {
 const sections = [
   {
     title: "Desarrollo Web y Móvil",
-    items: ["HTML, CSS, JavaScript", "React, Next.js, Vue.js", "iOS y Android nativo", "Flutter y React Native"]
+    items: ["Aplicaciones web y móviles", "React, Next.js, Vue.js", "iOS y Android nativo", "Tecnologías web modernas"]
   },
   {
     title: "Automatización Inteligente",
-    items: ["Integración con Alexa", "Sistemas de control domótico", "IoT y dispositivos conectados", "Optimización energética"]
+    items: ["Integración de sistemas IoT", "Automatización de procesos", "Ingeniería Mecatrónica", "Optimización de sistemas"]
   },
   {
-    title: "Innovación Constante",
-    items: ["Investigación de nuevas tecnologías", "Soluciones personalizadas", "Mejora continua de procesos", "Enfoque en experiencia del usuario"]
+    title: "Diseño y Marketing",
+    items: ["Diseño gráfico", "Marketing digital", "Experiencia de usuario", "Estrategias de comunicación"]
+  },
+  {
+    title: "Gestión y Finanzas",
+    items: ["Dirección de proyectos", "Gestión financiera", "Desarrollo backend", "Estrategia empresarial"]
   }
 ];
+
 
 const links = ["Nuestra Misión", "Visión", "Logros", "Proceso de Trabajo", "Clientes Satisfechos"];
 
@@ -72,7 +77,7 @@ export default function AboutUsContent() {
             <motion.a key={link} href="#" className="hover:text-gray-300 transition-colors duration-300" variants={fadeInUp}>{link}</motion.a>
           ))}
         </motion.div>
-        <motion.div className="grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-8 text-sm text-gray-200" variants={staggerChildren}>
+        <motion.div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-8 text-sm text-gray-200" variants={staggerChildren}>
           {sections.map((section, index) => (
             <motion.div key={index} className="backdrop-filter backdrop-blur-lg bg-white bg-opacity-10 p-4 md:p-6 rounded-lg transition-all duration-300 hover:bg-opacity-20" variants={fadeInUp}>
               <h3 className="text-lg md:text-xl font-bold text-white mb-4">{section.title}</h3>
