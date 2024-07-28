@@ -52,7 +52,7 @@ const teamMembers = [
   },
 ];
 
-const SpaceTeamSection: React.FC = () => {
+export default function SpaceTeamSection(){
   const memoizedTeamMembers = useMemo(() => teamMembers, []);
 
   return (
@@ -106,4 +106,4 @@ const SpaceTeamSection: React.FC = () => {
   );
 };
 
-export default SpaceTeamSection;
+
