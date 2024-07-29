@@ -1,7 +1,7 @@
 "use client";
-import Navbar from '../../components/Layout/Navbar/Navbar';
-import Parallax from '../../components/About-Us/Parallax';
-import { AboutUsMain } from '@/app/components/About-Us';
+import Navbar from '../../../src/components/Layout/Navbar/Navbar';
+import Parallax from '../../../src/components/About-Us/Parallax';
+import { AboutUsMain } from '@/src/components/About-Us';
 
 export default function About() {
   return (

@@ -3,7 +3,7 @@
 import React from 'react';
 import dynamic from 'next/dynamic';
 import ErrorBoundary from '../../common/ErrorBoundary';
-import { useModel3DResponsive } from '@/hooks/useModel3DResponsive';
+import { useModel3DResponsive } from '@/src/hooks/useModel3DResponsive';
 import AboutUsContent from './AboutUsContent';
 import SpaceTeamSection from '../Team/SpaceTeamSection';
 

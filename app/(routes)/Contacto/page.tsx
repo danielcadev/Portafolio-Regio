@@ -1,4 +1,5 @@
-import Navbar from '../../components/Layout/Navbar/Navbar';
+import Navbar from '../../../src/components/Layout/Navbar/Navbar';
+import ContactForm from '@/src/components/Contact/ContactForm';
 // import ContactForm from '../components/';
 
 export default function Projects() {
@@ -7,7 +8,7 @@ export default function Projects() {
     <div className="min-h-screen flex flex-col">
       <Navbar />
       <div className="flex-grow ">
-       
+       <ContactForm />
       </div>
     </div>
 

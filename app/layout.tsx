@@ -1,9 +1,9 @@
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
-import SmoothScroll from "./components/Layout/SmoothScroll";
-import { Navbar } from './components/Layout/Navbar';
-import Footer from "./components/Layout/Footer";
+import SmoothScroll from "../src/components/Layout/SmoothScroll";
+import { Navbar } from '../src/components/Layout/Navbar';
+import Footer from "../src/components/Layout/Footer";
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {

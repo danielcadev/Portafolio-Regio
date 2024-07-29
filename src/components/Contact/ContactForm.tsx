@@ -3,7 +3,7 @@ import React, { useRef } from 'react';
 import { useForm, SubmitHandler } from 'react-hook-form';
 import axios, { AxiosError, AxiosResponse } from 'axios';
 import { FormInputs, StatusState } from './types';
-import Planet from '../../3DModels/ModelContact';
+import Planet from '../../../app/3DModels/ModelContact';
 
 const ContactForm: React.FC = () => {
   const { register, handleSubmit, formState: { errors }, reset } = useForm<FormInputs>();

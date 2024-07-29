@@ -7,7 +7,7 @@ import { Stars, Preload } from '@react-three/drei';
 import { EffectComposer, Bloom, Noise, Vignette } from '@react-three/postprocessing';
 import ErrorBoundary from '../../common/ErrorBoundary';
 
-const Model = dynamic(() => import('../../../3DModels/ModelAboutUs'), { ssr: false });
+const Model = dynamic(() => import('../../../../app/3DModels/ModelAboutUs'), { ssr: false });
 
 interface ModelPosition {
   [key: string]: [number, number, number];
