@@ -1,138 +1,108 @@
-"use client";
+'use client';
 
-import React, { useMemo, Suspense, useEffect, useRef } from 'react';
-import { Canvas, useThree, useLoader, useFrame } from '@react-three/fiber';
-import { Stars, SoftShadows } from '@react-three/drei';
+import React, { Suspense, useRef, useState, useEffect } from 'react';
+import { Canvas, useFrame, useThree, useLoader } from '@react-three/fiber';
+import { Environment, Html } from '@react-three/drei';
 import * as THREE from 'three';
-import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
+import { GLTF, GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
 import { DRACOLoader } from 'three/examples/jsm/loaders/DRACOLoader.js';
+import { KTX2Loader } from 'three/examples/jsm/loaders/KTX2Loader.js';
 
-interface ModelProps {
-  path: string;
-  position: THREE.Vector3;
-  scale: THREE.Vector3;
+let dracoLoader: DRACOLoader;
+let ktx2Loader: KTX2Loader;
+
+if (typeof window !== 'undefined') {
+  dracoLoader = new DRACOLoader().setDecoderPath('/draco/');
+  ktx2Loader = new KTX2Loader().setTranscoderPath('/basis/');
 }
 
-function Model({ path, position, scale }: ModelProps) {
-  const gltf = useLoader(GLTFLoader, path, (loader) => {
-    const dracoLoader = new DRACOLoader().setDecoderPath('/draco/');
-    loader.setDRACOLoader(dracoLoader);
-  });
+const Loader = () => (
+  <Html center>
+    <div className="text-white text-xl">Cargando...</div>
+  </Html>
+);
 
-  const modelRef = useRef<THREE.Group>(null);
+type GLTFResult = GLTF & {
+  nodes: { [key: string]: THREE.Mesh };
+  materials: { [key: string]: THREE.Material };
+};
+
+const Model = ({ path, position, scale }: { path: string; position: THREE.Vector3; scale: THREE.Vector3 }) => {
+  const { gl } = useThree();
+  const gltf = useLoader(GLTFLoader, path, (loader) => {
+    if (dracoLoader && ktx2Loader) {
+      loader.setDRACOLoader(dracoLoader);
+      loader.setKTX2Loader(ktx2Loader.detectSupport(gl));
+    }
+  }) as GLTFResult;
+
+  const ref = useRef<THREE.Group>(null!);
 
   useFrame((state) => {
-    if (modelRef.current) {
-      // Rotación suave
-      modelRef.current.rotation.y += 0.005;
-      
-      // Movimiento suave arriba y abajo para el astronauta
+    if (ref.current) {
+      ref.current.rotation.y += path.includes('earth') ? 0.001 : 0.0005;
       if (path.includes('astro')) {
-        modelRef.current.position.y = position.y + Math.sin(state.clock.elapsedTime) * 0.1;
-      }
-      
-      // Rotación más rápida para la Tierra
-      if (path.includes('earth')) {
-        modelRef.current.rotation.y += 0.01;
+        ref.current.position.y = position.y + Math.sin(state.clock.elapsedTime) * 0.05;
       }
     }
   });
 
-  return (
-    <primitive 
-      ref={modelRef}
-      object={gltf.scene} 
-      position={position} 
-      scale={scale}
-      castShadow
-      receiveShadow
-    />
-  );
-}
+  return <primitive ref={ref} object={gltf.scene} position={position} scale={scale} />;
+};
 
-function Lights() {
-  const lightRef = useRef<THREE.DirectionalLight>(null);
-
-  useFrame(({ clock }) => {
-    if (lightRef.current) {
-      // Mover la luz en un círculo
-      lightRef.current.position.x = Math.sin(clock.elapsedTime * 0.2) * 5;
-      lightRef.current.position.z = Math.cos(clock.elapsedTime * 0.2) * 5;
-    }
-  });
+const SceneContent = ({ isMobile }: { isMobile: boolean }) => {
+  const positions = {
+    astro: new THREE.Vector3(isMobile ? -1 : -2, isMobile ? 1 : 0, isMobile ? -1 : 0),
+    earth: new THREE.Vector3(isMobile ? 1 : 2, isMobile ? 1 : 0, 0),
+  };
+  const scales = {
+    astro: new THREE.Vector3(...(isMobile ? [0.6, 0.6, 0.6] : [0.5, 0.5, 0.5])),
+    earth: new THREE.Vector3(...(isMobile ? [0.045, 0.045, 0.045] : [0.05, 0.05, 0.05])),
+  };
 
   return (
     <>
-      <ambientLight intensity={0.3} />
-      <directionalLight
-        ref={lightRef}
-        position={[5, 5, 5]}
-        intensity={1}
-        castShadow
-        shadow-mapSize-width={1024}
-        shadow-mapSize-height={1024}
-        shadow-camera-far={50}
-        shadow-camera-left={-10}
-        shadow-camera-right={10}
-        shadow-camera-top={10}
-        shadow-camera-bottom={-10}
-      />
-    </>
-  );
-}
-
-function SceneContent({ isMobile }: { isMobile: boolean }) {
-  const modelPositions = useMemo(() => ({
-    astro: new THREE.Vector3(isMobile ? -1 : -5, isMobile ? 2 : 0, isMobile ? -1 : 0),
-    earth: new THREE.Vector3(isMobile ? 1 : 4.1, isMobile ? 2 : 1.5, 0),
-  }), [isMobile]);
-
-  const modelScales = useMemo(() => ({
-    astro: new THREE.Vector3(...(isMobile ? [1.2, 1.2, 1.2] : [1, 1, 1])),
-    earth: new THREE.Vector3(...(isMobile ? [0.09, 0.09, 0.09] : [0.1, 0.1, 0.1])),
-  }), [isMobile]);
-
-  return (
-    <>
-      <Lights />
-      <Stars 
-        radius={100} 
-        depth={50} 
-        count={isMobile ? 1500 : 3000} 
-        factor={4} 
-        saturation={0} 
-        fade 
-      />
-      <Suspense fallback={null}>
-        <Model path="/astro1.glb" position={modelPositions.astro} scale={modelScales.astro} />
-        <Model path="/earth3.glb" position={modelPositions.earth} scale={modelScales.earth} />
+      <ambientLight intensity={0.5} />
+      <pointLight position={[10, 10, 10]} intensity={1} />
+      <Suspense fallback={<Loader />}>
+        <Model path="/astro1.glb" position={positions.astro} scale={scales.astro} />
+        <Model path="/earth3.glb" position={positions.earth} scale={scales.earth} />
       </Suspense>
-      <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, -5, 0]} receiveShadow>
-        <planeGeometry args={[100, 100]} />
-        <shadowMaterial transparent opacity={0.4} />
-      </mesh>
+      <Environment preset="city" />
     </>
   );
-}
+};
 
 export default function SceneSpace({ isMobile }: { isMobile: boolean }) {
-  const cameraPosition = useMemo(() => 
-    new THREE.Vector3(0, 3, isMobile ? 10 : 7),
-  [isMobile]);
-
-  const cameraFov = useMemo(() => isMobile ? 75 : 60, [isMobile]);
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    // Preload models (código de precarga aquí)
+    const loadModels = async () => {
+      const loader = new GLTFLoader();
+      if (dracoLoader && ktx2Loader) {
+        loader.setDRACOLoader(dracoLoader);
+        loader.setKTX2Loader(ktx2Loader);
+      }
+      
+      await Promise.all([
+        new Promise(resolve => loader.load('/astro1.glb', resolve)),
+        new Promise(resolve => loader.load('/earth3.glb', resolve))
+      ]);
+      
+      setIsLoading(false);
+    };
+    loadModels();
   }, []);
 
+  if (isLoading) {
+    return <div className="w-full h-screen flex items-center justify-center bg-black text-white">Cargando escena...</div>;
+  }
+
   return (
-    <Canvas 
-      shadows
-      camera={{ position: cameraPosition, fov: cameraFov }}
+    <Canvas
+      camera={{ position: [0, 0, isMobile ? 6 : 5], fov: 50 }}
       className="absolute inset-0 z-0"
     >
-      <SoftShadows />
       <SceneContent isMobile={isMobile} />
     </Canvas>
   );
