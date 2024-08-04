@@ -1,10 +1,10 @@
 'use client';
 
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef } from 'react';
 import { FaGithub, FaLinkedin, FaTwitter } from 'react-icons/fa';
 import Link from 'next/link';
 import Image from 'next/image';
-import { motion, useScroll, useTransform } from 'framer-motion';
+import { motion } from 'framer-motion';
 
 const socialLinks = [
   { href: 'https://github.com/yourusername', icon: <FaGithub />, label: 'GitHub' },
@@ -13,82 +13,38 @@ const socialLinks = [
 ];
 
 const services = [
-  {
-    title: 'Desarrollo Web y Móvil',
-    description: 'Creamos aplicaciones web y móviles utilizando las últimas tecnologías.',
-    icon: '💻',
-  },
-  {
-    title: 'Automatización Inteligente',
-    description: 'Implementamos soluciones IoT y optimizamos procesos con ingeniería mecatrónica.',
-    icon: '🤖',
-  },
-  {
-    title: 'Diseño y Marketing',
-    description: 'Ofrecemos servicios de diseño gráfico y estrategias de marketing digital.',
-    icon: '🎨',
-  },
+  { title: 'Desarrollo Web y Móvil', description: 'Creamos aplicaciones web y móviles utilizando las últimas tecnologías.', icon: '💻' },
+  { title: 'Automatización Inteligente', description: 'Implementamos soluciones IoT y optimizamos procesos con ingeniería mecatrónica.', icon: '🤖' },
+  { title: 'Diseño y Marketing', description: 'Ofrecemos servicios de diseño gráfico y estrategias de marketing digital.', icon: '🎨' },
 ];
 
 export default function Hero() {
   const videoRef = useRef<HTMLVideoElement>(null);
-  const [isVideoLoaded, setIsVideoLoaded] = useState(false);
-  const { scrollYProgress } = useScroll();
-  const opacity = useTransform(scrollYProgress, [0, 0.5], [1, 0]);
 
   useEffect(() => {
-    const videoElement = videoRef.current;
-    if (videoElement) {
-      const playVideo = () => {
-        videoElement.play().catch(error => {
-          console.error('Video autoplay failed:', error);
-          // Implementa una lógica alternativa aquí si es necesario
-        });
-      };
-
-      if (isVideoLoaded) {
-        playVideo();
-      } else {
-        videoElement.addEventListener('loadeddata', playVideo);
-      }
-
-      return () => {
-        videoElement.removeEventListener('loadeddata', playVideo);
-      };
+    if (videoRef.current) {
+      videoRef.current.play().catch(error => {
+        console.error("Error al reproducir el video:", error);
+      });
     }
-  }, [isVideoLoaded]);
+  }, []);
 
   return (
     <div className="relative w-full min-h-screen overflow-hidden">
       <div className="absolute top-0 left-0 w-full h-full">
-        <Image
-          src="/video-poster.jpg"
-          layout="fill"
-          objectFit="cover"
-          alt="Video poster"
-          priority
-        />
-        <motion.video 
-          ref={videoRef} 
+        <Image src="/video-poster.jpg" layout="fill" objectFit="cover" alt="Background" priority />
+        <video 
+          ref={videoRef}
           autoPlay 
           muted 
           loop 
           playsInline
           preload="auto"
           className="absolute top-0 left-0 w-full h-full object-cover"
-          style={{ opacity }}
-          onLoadedData={() => setIsVideoLoaded(true)}
         >
           <source src="/video2.mp4" type="video/mp4" />
-          Tu navegador no soporta el elemento de video.
-        </motion.video>
+        </video>
       </div>
-      
-      {!isVideoLoaded && (
-        <div className="absolute top-0 left-0 w-full h-full flex items-center justify-center bg-black bg-opacity-50 text-white text-2xl">
-          Cargando video...
-        </div>
-      )}
       
       <main className="relative z-10 flex flex-col items-center justify-center w-full min-h-screen p-4 sm:p-10">
         <motion.div 
@@ -97,9 +53,7 @@ export default function Hero() {
           transition={{ duration: 0.8 }}
           className="text-center space-y-8 mb-16"
         >
-          <h1 className="text-5xl sm:text-7xl font-extrabold text-white tracking-tight">
-            Regiossoft
-          </h1>
+          <h1 className="text-5xl sm:text-7xl font-extrabold text-white tracking-tight">Regiossoft</h1>
           <p className="text-xl sm:text-2xl text-white max-w-3xl mx-auto leading-relaxed">
             Somos cuatro jóvenes apasionados por crear soluciones digitales innovadoras y atractivas.
           </p>
