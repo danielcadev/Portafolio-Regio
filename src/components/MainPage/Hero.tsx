@@ -1,8 +1,9 @@
 'use client';
 
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { FaGithub, FaLinkedin, FaTwitter } from 'react-icons/fa';
 import Link from 'next/link';
+import Image from 'next/image';
 import { motion, useScroll, useTransform } from 'framer-motion';
 
 const socialLinks = [
@@ -27,37 +28,67 @@ const services = [
     description: 'Ofrecemos servicios de diseño gráfico y estrategias de marketing digital.',
     icon: '🎨',
   },
-  {
-    title: 'Gestión y Finanzas',
-    description: 'Gestionamos proyectos y proporcionamos soluciones financieras y estratégicas.',
-    icon: '📊',
-  },
 ];
 
 export default function Hero() {
   const videoRef = useRef<HTMLVideoElement>(null);
+  const [isVideoLoaded, setIsVideoLoaded] = useState(false);
   const { scrollYProgress } = useScroll();
   const opacity = useTransform(scrollYProgress, [0, 0.5], [1, 0]);
 
   useEffect(() => {
-    if (videoRef.current) {
-      videoRef.current.play().catch(error => console.error('Video autoplay failed:', error));
+    const videoElement = videoRef.current;
+    if (videoElement) {
+      const playVideo = () => {
+        videoElement.play().catch(error => {
+          console.error('Video autoplay failed:', error);
+          // Implementa una lógica alternativa aquí si es necesario
+        });
+      };
+
+      if (isVideoLoaded) {
+        playVideo();
+      } else {
+        videoElement.addEventListener('loadeddata', playVideo);
+      }
+
+      return () => {
+        videoElement.removeEventListener('loadeddata', playVideo);
+      };
     }
-  }, []);
+  }, [isVideoLoaded]);
 
   return (
     <div className="relative w-full min-h-screen overflow-hidden">
-      <motion.video 
-        ref={videoRef} 
-        autoPlay 
-        muted 
-        loop 
-        playsInline
-        className="absolute top-0 left-0 w-full h-full object-cover"
-        style={{ opacity }}
-      >
-        <source src="/video2.mp4" type="video/mp4" />
-      </motion.video>
+      <div className="absolute top-0 left-0 w-full h-full">
+        <Image
+          src="/video-poster.jpg"
+          layout="fill"
+          objectFit="cover"
+          alt="Video poster"
+          priority
+        />
+        <motion.video 
+          ref={videoRef} 
+          autoPlay 
+          muted 
+          loop 
+          playsInline
+          preload="auto"
+          className="absolute top-0 left-0 w-full h-full object-cover"
+          style={{ opacity }}
+          onLoadedData={() => setIsVideoLoaded(true)}
+        >
+          <source src="/video2.mp4" type="video/mp4" />
+          Tu navegador no soporta el elemento de video.
+        </motion.video>
+      </div>
+      
+      {!isVideoLoaded && (
+        <div className="absolute top-0 left-0 w-full h-full flex items-center justify-center bg-black bg-opacity-50 text-white text-2xl">
+          Cargando video...
+        </div>
+      )}
       
       <main className="relative z-10 flex flex-col items-center justify-center w-full min-h-screen p-4 sm:p-10">
         <motion.div 
@@ -112,7 +143,7 @@ export default function Hero() {
           </div>
         </motion.div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 w-full max-w-7xl">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 w-full max-w-7xl">
           {services.map((service, index) => (
             <motion.div
               key={index}
