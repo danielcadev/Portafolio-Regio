@@ -23,18 +23,15 @@ export default function ModelAbout({
   const ref = useRef<THREE.Group>(null);
   const { gl } = useThree();
 
-  const loadModel = useCallback((loader: GLTFLoader) => {
-    const ktx2Loader = new KTX2Loader()
-      .setTranscoderPath('/basis/') 
-      .detectSupport(gl);
-    loader.setKTX2Loader(ktx2Loader);
+  const loadModel = useCallback(() => {
+    const loader = new GLTFLoader();
+    const ktx2Loader = new KTX2Loader().setTranscoderPath('/basis/').detectSupport(gl);
+    const dracoLoader = new DRACOLoader().setDecoderPath('/draco/');
 
-    const dracoLoader = new DRACOLoader();
-    dracoLoader.setDecoderPath('/draco/'); 
+    loader.setKTX2Loader(ktx2Loader);
     loader.setDRACOLoader(dracoLoader);
 
-    // Si necesitas MeshoptDecoder, descomenta la siguiente línea:
-    // loader.setMeshoptDecoder(MeshoptDecoder);
+    return loader;
   }, [gl]);
 
   const gltf = useLoader(GLTFLoader, path, loadModel);

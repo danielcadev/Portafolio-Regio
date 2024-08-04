@@ -1,97 +1,139 @@
 "use client";
 
-import React, { useMemo, Suspense } from 'react';
-import dynamic from 'next/dynamic';
-import { Canvas } from '@react-three/fiber';
-import { Stars, Preload } from '@react-three/drei';
-import { EffectComposer, Bloom, Noise, Vignette } from '@react-three/postprocessing';
-import ErrorBoundary from '../../common/ErrorBoundary';
+import React, { useMemo, Suspense, useEffect, useRef } from 'react';
+import { Canvas, useThree, useLoader, useFrame } from '@react-three/fiber';
+import { Stars, SoftShadows } from '@react-three/drei';
+import * as THREE from 'three';
+import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
+import { DRACOLoader } from 'three/examples/jsm/loaders/DRACOLoader.js';
 
-const Model = dynamic(() => import('../../../../app/3DModels/ModelAboutUs'), { ssr: false });
-
-interface ModelPosition {
-  [key: string]: [number, number, number];
+interface ModelProps {
+  path: string;
+  position: THREE.Vector3;
+  scale: THREE.Vector3;
 }
 
-interface ModelScale {
-  [key: string]: [number, number, number];
-}
+function Model({ path, position, scale }: ModelProps) {
+  const gltf = useLoader(GLTFLoader, path, (loader) => {
+    const dracoLoader = new DRACOLoader().setDecoderPath('/draco/');
+    loader.setDRACOLoader(dracoLoader);
+  });
 
-interface SceneCanvasProps {
-  isMobile: boolean;
-}
+  const modelRef = useRef<THREE.Group>(null);
 
-function WebGLNotSupported() {
+  useFrame((state) => {
+    if (modelRef.current) {
+      // Rotación suave
+      modelRef.current.rotation.y += 0.005;
+      
+      // Movimiento suave arriba y abajo para el astronauta
+      if (path.includes('astro')) {
+        modelRef.current.position.y = position.y + Math.sin(state.clock.elapsedTime) * 0.1;
+      }
+      
+      // Rotación más rápida para la Tierra
+      if (path.includes('earth')) {
+        modelRef.current.rotation.y += 0.01;
+      }
+    }
+  });
+
   return (
-    <div className="webgl-not-supported">
-      Lo sentimos, tu navegador o hardware no soporta WebGL. 
-      No se pueden mostrar los modelos 3D.
-    </div>
+    <primitive 
+      ref={modelRef}
+      object={gltf.scene} 
+      position={position} 
+      scale={scale}
+      castShadow
+      receiveShadow
+    />
   );
 }
 
-function LoadingFallback() {
-  return null; // O puedes retornar un objeto 3D simple como placeholder
-}
+function Lights() {
+  const lightRef = useRef<THREE.DirectionalLight>(null);
 
-function SceneContent({ modelPositions, modelScales }: { 
-  isMobile: boolean, 
-  modelPositions: ModelPosition, 
-  modelScales: ModelScale,
-  cameraPosition: [number, number, number]
-}) {
+  useFrame(({ clock }) => {
+    if (lightRef.current) {
+      // Mover la luz en un círculo
+      lightRef.current.position.x = Math.sin(clock.elapsedTime * 0.2) * 5;
+      lightRef.current.position.z = Math.cos(clock.elapsedTime * 0.2) * 5;
+    }
+  });
+
   return (
     <>
-      <ambientLight intensity={0.5} />
-      <directionalLight position={[5, 5, 5]} intensity={1} />
-      <Stars radius={100} depth={50} count={5000} factor={4} saturation={0} fade speed={1} />
-      <Suspense fallback={<LoadingFallback />}>
-        <Model path="/astro1.glb" position={modelPositions.astro} scale={modelScales.astro} />
-        <Model path="/earth3.glb" position={modelPositions.earth} scale={modelScales.earth} />
-      </Suspense>
-      <EffectComposer>
-        <Bloom luminanceThreshold={0.2} luminanceSmoothing={0.9} height={300} intensity={1.5} />
-        <Noise opacity={0.02} />
-        <Vignette eskil={false} offset={0.1} darkness={1.1} />
-      </EffectComposer>
-      <Preload all />
+      <ambientLight intensity={0.3} />
+      <directionalLight
+        ref={lightRef}
+        position={[5, 5, 5]}
+        intensity={1}
+        castShadow
+        shadow-mapSize-width={1024}
+        shadow-mapSize-height={1024}
+        shadow-camera-far={50}
+        shadow-camera-left={-10}
+        shadow-camera-right={10}
+        shadow-camera-top={10}
+        shadow-camera-bottom={-10}
+      />
     </>
   );
 }
 
-export default function SceneSpace({ isMobile }: SceneCanvasProps) {
-  const modelPositions: ModelPosition = useMemo(() => ({
-    astro: isMobile ? [-1, 2, -1] : [-5, 0, 0],
-    earth: isMobile ? [1, 2, 0] : [4.1, 1.5, 0],
+function SceneContent({ isMobile }: { isMobile: boolean }) {
+  const modelPositions = useMemo(() => ({
+    astro: new THREE.Vector3(isMobile ? -1 : -5, isMobile ? 2 : 0, isMobile ? -1 : 0),
+    earth: new THREE.Vector3(isMobile ? 1 : 4.1, isMobile ? 2 : 1.5, 0),
   }), [isMobile]);
 
-  const modelScales: ModelScale = useMemo(() => ({
-    astro: isMobile ? [1.2, 1.2, 1.2] : [1, 1, 1],
-    earth: isMobile ? [0.09, 0.09, 0.09] : [0.1, 0.1, 0.1],
+  const modelScales = useMemo(() => ({
+    astro: new THREE.Vector3(...(isMobile ? [1.2, 1.2, 1.2] : [1, 1, 1])),
+    earth: new THREE.Vector3(...(isMobile ? [0.09, 0.09, 0.09] : [0.1, 0.1, 0.1])),
   }), [isMobile]);
-
-  const cameraPosition: [number, number, number] = useMemo(() => 
-    isMobile ? [0, 3, 10] : [0, 3, 7],
-  [isMobile]);
-
-  const cameraFov = useMemo(() => 
-    isMobile ? 75 : 60,
-  [isMobile]);
 
   return (
-    <ErrorBoundary fallback={<WebGLNotSupported />}>
-      <Canvas 
-        camera={{ position: cameraPosition, fov: cameraFov }}
-        className="absolute inset-0 z-0"
-        aria-label="3D scene with astronaut, Earth, and Moon"
-      >
-        <SceneContent
-          isMobile={isMobile}
-          modelPositions={modelPositions}
-          modelScales={modelScales}
-          cameraPosition={cameraPosition}
-        />
-      </Canvas>
-    </ErrorBoundary>
+    <>
+      <Lights />
+      <Stars 
+        radius={100} 
+        depth={50} 
+        count={isMobile ? 1500 : 3000} 
+        factor={4} 
+        saturation={0} 
+        fade 
+      />
+      <Suspense fallback={null}>
+        <Model path="/astro1.glb" position={modelPositions.astro} scale={modelScales.astro} />
+        <Model path="/earth3.glb" position={modelPositions.earth} scale={modelScales.earth} />
+      </Suspense>
+      <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, -5, 0]} receiveShadow>
+        <planeGeometry args={[100, 100]} />
+        <shadowMaterial transparent opacity={0.4} />
+      </mesh>
+    </>
+  );
+}
+
+export default function SceneSpace({ isMobile }: { isMobile: boolean }) {
+  const cameraPosition = useMemo(() => 
+    new THREE.Vector3(0, 3, isMobile ? 10 : 7),
+  [isMobile]);
+
+  const cameraFov = useMemo(() => isMobile ? 75 : 60, [isMobile]);
+
+  useEffect(() => {
+    // Preload models (código de precarga aquí)
+  }, []);
+
+  return (
+    <Canvas 
+      shadows
+      camera={{ position: cameraPosition, fov: cameraFov }}
+      className="absolute inset-0 z-0"
+    >
+      <SoftShadows />
+      <SceneContent isMobile={isMobile} />
+    </Canvas>
   );
 }
