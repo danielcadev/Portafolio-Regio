@@ -3,7 +3,6 @@
 import { useEffect, useRef } from 'react';
 import { FaGithub, FaLinkedin, FaTwitter } from 'react-icons/fa';
 import Link from 'next/link';
-import Image from 'next/image';
 import { motion } from 'framer-motion';
 
 const socialLinks = [
@@ -29,22 +28,21 @@ export default function Hero() {
     }
   }, []);
 
+  const cloudinaryVideoUrl = "https://res.cloudinary.com/df1xirxtx/video/upload/v1723134927/Video2_litruh.mp4";
+
   return (
     <div className="relative w-full min-h-screen overflow-hidden">
-      <div className="absolute top-0 left-0 w-full h-full">
-        <Image src="/video-poster.jpg" layout="fill" objectFit="cover" alt="Background" priority />
-        <video 
-          ref={videoRef}
-          autoPlay 
-          muted 
-          loop 
-          playsInline
-          preload="auto"
-          className="absolute top-0 left-0 w-full h-full object-cover"
-        >
-          <source src="/video2.mp4" type="video/mp4" />
-        </video>
-      </div>
+      <video
+        ref={videoRef}
+        autoPlay
+        muted 
+        loop
+        playsInline
+        className="absolute top-0 left-0 w-full h-full object-cover"
+      >
+        <source src={cloudinaryVideoUrl} type="video/mp4" />
+        Tu navegador no soporta el elemento de video.
+      </video>
       
       <main className="relative z-10 flex flex-col items-center justify-center w-full min-h-screen p-4 sm:p-10">
         <motion.div 
