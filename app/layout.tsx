@@ -5,6 +5,7 @@ import SmoothScroll from "../src/components/Layout/SmoothScroll";
 import { Navbar } from '../src/components/Layout/Navbar';
 import Footer from "../src/components/Layout/Footer";
 const inter = Inter({ subsets: ["latin"] });
+import { SpeedInsights } from '@vercel/speed-insights/next';
 
 export const metadata: Metadata = {
   title: "RegioSsoft - Soluciones Tecnológicas Innovadoras",
@@ -29,6 +30,7 @@ export default function RootLayout({
         <Navbar />
         <SmoothScroll>{children}</SmoothScroll>
         <Footer />
+        <SpeedInsights />
       </body>
     </html>
   );
