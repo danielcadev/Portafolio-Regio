@@ -1,9 +1,14 @@
-import SmoothScroll from '../src/components/Layout/SmoothScroll';
-import Hero from '../src/components/MainPage/Hero';
-import Skills from '../src/components/MainPage/Grid';
+import React from 'react';
+import SmoothScroll from '@/components/Layout/SmoothScroll';
+import Hero from '@/components/MainPage/Hero';
+import ProjectShowcase from '@/components/MainPage/ProjectShowcase';
+import { getProjects } from '@/data/projects';
 
 
 export default function MainPage() {
+  const projects = getProjects()
+  const titlePositions = [0, 220, 440];
+
   return (
     <SmoothScroll options={{
       smoothWheel: true,
@@ -15,13 +20,13 @@ export default function MainPage() {
     }}>
       <div className="flex flex-col min-h-screen">
         <main className="flex-grow">
-          <Hero />
-          <div className="container mx-auto py-16 px-4 space-y-16">
-            <div className=" p-6 rounded-lg shadow-lg">
-              <Skills />
-            </div>
-          
-          </div>
+          <section id="hero">
+            <Hero />
+          </section>
+
+          <section id="projects" className="py-4">
+            <ProjectShowcase titlePositions={titlePositions} projects={projects} />
+          </section>
         </main>
       </div>
     </SmoothScroll>
