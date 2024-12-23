@@ -1,7 +1,7 @@
 "use client"
 import React, { useState } from 'react';
 import Image from 'next/image';
-import { Project } from '../../types/Project';
+import { Project } from '@/types/Project';
 import { motion, AnimatePresence } from 'framer-motion';
 
 interface ProjectShowcaseProps {
@@ -71,7 +71,7 @@ export default function ProjectShowcase({ projects, titlePositions }: ProjectSho
                     ))}
                   </div>
                   <button className="bg-white text-black text-xl font-semibold py-4 px-8 rounded-full hover:bg-opacity-90 transition-colors duration-300 self-end">
-                    View →
+                    Ver →
                   </button>
                 </motion.div>
               )}

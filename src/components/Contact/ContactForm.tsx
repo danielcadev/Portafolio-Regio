@@ -1,101 +1,179 @@
-'use client';
-import React, { useRef } from 'react';
-import { useForm, SubmitHandler } from 'react-hook-form';
-import axios, { AxiosError, AxiosResponse } from 'axios';
-import { FormInputs, StatusState } from './types';
-import Planet from '../../3DModels/ModelContact';
+"use client";
 
-const ContactForm: React.FC = () => {
-  const { register, handleSubmit, formState: { errors }, reset } = useForm<FormInputs>();
-  const [status, setStatus] = React.useState<StatusState>({ type: 'idle', message: '' });
-  const mountRef = useRef<HTMLDivElement | null>(null);
+import { useState, useRef } from "react";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import * as z from "zod";
+import { Button } from "@/components/ui/button";
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "@/components/ui/form";
+import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
+import {
+    GoogleReCaptchaProvider,
+    useGoogleReCaptcha,
+  } from "react-google-recaptcha-v3";
+import { relativeBook, relativeBold } from "@/fonts"; // Importa las fuentes que vas a usar
 
-  const onSubmit: SubmitHandler<FormInputs> = async (data) => {
-    try {
-      setStatus({ type: 'loading', message: 'Enviando mensaje...' });
-      const response: AxiosResponse = await axios.post('/api/contact', data);
-      console.log('Mensaje enviado:', response.data);
-      setStatus({ type: 'success', message: '¡Mensaje enviado con éxito!' });
-      reset();
-    } catch (error) {
-      console.error('Error al enviar mensaje:', error);
-      const axiosError = error as AxiosError;
-      setStatus({
-        type: 'error',
-        message: (axiosError.response?.data as any)?.error || 'Error al enviar el mensaje. Por favor, intenta de nuevo.'
-      });
+const formSchema = z.object({
+  name: z.string().min(2, { message: "El nombre debe tener al menos 2 caracteres." }).max(50),
+  email: z.string().email({ message: "Introduce un email válido." }),
+  message: z.string().min(10, { message: "El mensaje debe tener al menos 10 caracteres." }),
+  honeypot: z.string().optional(),
+});
+
+function ContactForm() {
+  const { executeRecaptcha } = useGoogleReCaptcha();
+  const [isSuccess, setIsSuccess] = useState(false);
+  const [isError, setIsError] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
+
+  const form = useForm<z.infer<typeof formSchema>>({
+    resolver: zodResolver(formSchema),
+    defaultValues: {
+      name: "",
+      email: "",
+      message: "",
+      honeypot: "",
+    },
+  });
+
+  async function onSubmit(values: z.infer<typeof formSchema>) {
+    setIsLoading(true);
+    setIsSuccess(false);
+    setIsError(false);
+
+    if (!executeRecaptcha) {
+      setIsError(true);
+      setIsLoading(false);
+      return;
     }
-  };
+
+    const token = await executeRecaptcha("submit");
+    if (!token) {
+      console.error("No se pudo obtener el token de reCAPTCHA");
+      setIsError(true);
+      setIsLoading(false);
+      return;
+    }
+
+    try {
+      const response = await fetch("/api/sendEmail", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ ...values, token }),
+      });
+
+      if (response.ok) {
+        setIsSuccess(true);
+        form.reset();
+      } else {
+        setIsError(true);
+      }
+    } catch (error) {
+      setIsError(true);
+    } finally {
+      setIsLoading(false);
+    }
+  }
 
   return (
-    <div className="relative min-h-screen flex items-center justify-center bg-gray-900">
-      <div className="absolute inset-0" ref={mountRef}>
-        <Planet />
-      </div>
-      <div className="relative z-10 max-w-md w-full space-y-8 bg-black bg-opacity-80 p-8 rounded-lg shadow-lg">
-        <h2 className="text-3xl font-bold text-white text-center">Contáctanos</h2>
-        <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
-          <div>
-            <label className="block text-white text-sm font-semibold mb-2" htmlFor="name">
-              Nombre
-            </label>
-            <input
-              {...register('name', { required: 'Este campo es requerido' })}
-              className="w-full px-3 py-2 text-gray-900 border rounded-lg focus:outline-none focus:border-[#4f46e5] focus:ring focus:ring-[#4f46e5] focus:ring-opacity-50"
-              id="name"
-              type="text"
-              placeholder="Tu nombre"
+    <div className={`bg-black min-h-screen flex items-center justify-center text-white p-4 md:p-8 ${relativeBook.className}`}>
+      <div className="max-w-2xl w-full">
+        <h2 className={`text-3xl md:text-4xl font-bold text-center mb-6 md:mb-10 text-white ${relativeBold.className}`}>Contáctanos</h2>
+        <Form {...form}>
+          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8 p-6 md:p-10 rounded-xl shadow-2xl bg-neutral-900 border border-neutral-800">
+            <FormField
+              control={form.control}
+              name="name"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel className="text-neutral-300">Nombre</FormLabel>
+                  <FormControl>
+                    <Input placeholder="Tu nombre" {...field} className="bg-neutral-800 text-white border-neutral-700 focus:border-blue-500 focus:ring-blue-500 placeholder-neutral-500" />
+                  </FormControl>
+                  <FormMessage className="text-red-500" />
+                </FormItem>
+              )}
             />
-            {errors.name && <p className="text-red-500 text-xs mt-1">{errors.name.message}</p>}
-          </div>
-          <div>
-            <label className="block text-white text-sm font-semibold mb-2" htmlFor="email">
-              Correo Electrónico
-            </label>
-            <input
-              {...register('email', {
-                required: 'Este campo es requerido',
-                pattern: { value: /^\S+@\S+$/i, message: 'Correo electrónico inválido' }
-              })}
-              className="w-full px-3 py-2 text-gray-900 border rounded-lg focus:outline-none focus:border-[#4f46e5] focus:ring focus:ring-[#4f46e5] focus:ring-opacity-50"
-              id="email"
-              type="email"
-              placeholder="tu@email.com"
+            <FormField
+              control={form.control}
+              name="email"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel className="text-neutral-300">Email</FormLabel>
+                  <FormControl>
+                    <Input placeholder="tu@email.com" {...field} className="bg-neutral-800 text-white border-neutral-700 focus:border-blue-500 focus:ring-blue-500 placeholder-neutral-500" />
+                  </FormControl>
+                  <FormMessage className="text-red-500" />
+                </FormItem>
+              )}
             />
-            {errors.email && <p className="text-red-500 text-xs mt-1">{errors.email.message}</p>}
-          </div>
-          <div>
-            <label className="block text-white text-sm font-semibold mb-2" htmlFor="message">
-              Mensaje
-            </label>
-            <textarea
-              {...register('message', { required: 'Este campo es requerido' })}
-              className="w-full px-3 py-2 text-gray-900 border rounded-lg focus:outline-none focus:border-[#4f46e5] focus:ring focus:ring-[#4f46e5] focus:ring-opacity-50 h-32 resize-none"
-              id="message"
-              placeholder="¿En qué podemos ayudarte?"
+            <FormField
+              control={form.control}
+              name="message"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel className="text-neutral-300">Mensaje</FormLabel>
+                  <FormControl>
+                    <Textarea placeholder="Escribe tu mensaje aquí..." {...field} className="bg-neutral-800 text-white border-neutral-700 focus:border-blue-500 focus:ring-blue-500 resize-none placeholder-neutral-500" />
+                  </FormControl>
+                  <FormMessage className="text-red-500" />
+                </FormItem>
+              )}
             />
-            {errors.message && <p className="text-red-500 text-xs mt-1">{errors.message.message}</p>}
-          </div>
-          <div>
-            <button
-              className="w-full bg-[#3a4e7a] hover:bg-[#3a4e7a] text-white font-bold py-2 px-4 rounded-lg focus:outline-none focus:shadow-outline transition duration-300 ease-in-out transform hover:scale-105 disabled:bg-gray-400 disabled:transform-none"
+            {/* Campo honeypot */}
+            <input type="hidden" style={{ display: "none" }} {...form.register("honeypot")} />
+            <Button
               type="submit"
-              disabled={status.type === 'loading'}
+              className="w-full bg-blue-500 hover:bg-blue-600 text-white font-bold py-3 px-6 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400 focus:ring-opacity-75 transition-all duration-300"
+              disabled={isLoading}
             >
-              {status.type === 'loading' ? 'Enviando...' : 'Enviar Mensaje'}
-            </button>
-          </div>
-        </form>
-        {status.message && (
-          <div className={`p-4 rounded-lg text-center text-white ${
-            status.type === 'success' ? 'bg-green-500' : status.type === 'error' ? 'bg-red-500' : 'bg-[#3a4e7a]'
-          }`}>
-            {status.message}
-          </div>
-        )}
+              {isLoading ? (
+                <>
+                  <svg className="animate-spin h-5 w-5 mr-3" viewBox="0 0 24 24">
+                    <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                    <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"></path>
+                  </svg>
+                  Enviando...
+                </>
+              ) : (
+                "Enviar Mensaje"
+              )}
+            </Button>
+
+            {isSuccess && (
+              <p className="text-green-400 mt-4 text-center">Mensaje enviado con éxito!</p>
+            )}
+            {isError && (
+              <p className="text-red-500 mt-4 text-center">
+                Error al enviar el mensaje. Inténtalo de nuevo más tarde.
+              </p>
+            )}
+          </form>
+        </Form>
       </div>
     </div>
   );
-};
+}
 
-export default ContactForm;
+function Contact() {
+    return (
+      <GoogleReCaptchaProvider
+        reCaptchaKey={process.env.NEXT_PUBLIC_RECAPTCHA_SITE_KEY || ""}
+        language="es"
+      >
+        <ContactForm />
+      </GoogleReCaptchaProvider>
+    );
+  }
+  
+  export default Contact;

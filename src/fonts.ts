@@ -17,7 +17,7 @@ export const relativeBookItalic = localFont({
   display: 'swap',
 })
 export const relativeBook = localFont({ 
-  src: '../public/fonts/relative-book.woff.ttf',
+  src: '../public/fonts/Relative-Book.ttf',
   variable: '--font-relative-book',
   display: 'swap',
 })

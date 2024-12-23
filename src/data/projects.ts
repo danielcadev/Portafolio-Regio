@@ -1,28 +1,28 @@
 //src\data\projects.ts
-import { Project } from '../types/Project';
+import { Project } from "@/types/Project";
 
 export const projects: Project[] = [
   {
     id: '1',
-    title: "SafePal",
-    description: "Making your crypto experience safe and fun.",
-    mainImage: "/images/safepal-main.png",
-    tags: ["Brand", "Web", "Illustration"]
+    title: "Mitiquete",
+    description: "Web hecha para dar servicio de turismo a cualquier parte del mundo.",
+    mainImage: "/IMG_Proyectos/mitiquete2.png",
+    tags: ["Turismo", "Web", "Servicios"]
   },
   {
     id: '2',
-    title: "Solana",
-    description: "Blockchain of command and more.",
-    mainImage: "/images/safepal-main.png",
-    tags: ["Blockchain", "Web3", "Technology"]
+    title: "Conociendo Colombia",
+    description: "Web de turismo enfocada en el público extranjero para conocer Colombia.",
+    mainImage: "/IMG_Proyectos/ConociendoColombia.jpeg",
+    tags: ["Turismo", "Colombia", "Extranjeros"]
   },
   {
     id: '3',
-    title: "Lamar",
-    description: "You've seen us from your minivan.",
-    mainImage: "/images/safepal-main.png",
-    tags: ["Advertising", "Outdoor", "Marketing"]
-  }
+    title: "Multitienda Emprende",
+    description: "Web creada para ofrecer productos de alta calidad.",
+    mainImage: "/IMG_Proyectos/MultitiendaEmprende.png",
+    tags: ["E-commerce", "Emprendimiento", "Productos"]
+  },
 ];
 
 export function getProjects(): Project[] {

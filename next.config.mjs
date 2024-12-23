@@ -3,6 +3,11 @@ const nextConfig = {
   eslint: {
     ignoreDuringBuilds: true,
   },
+  experimental: {
+    turbo: {
+      output: "turbo", // Activa TurboPack como el empaquetador por defecto
+    },
+  },
   images: {
     remotePatterns: [
       {
