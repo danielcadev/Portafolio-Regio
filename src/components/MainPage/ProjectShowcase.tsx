@@ -3,6 +3,7 @@ import React, { useState } from 'react';
 import Image from 'next/image';
 import { Project } from '@/types/Project';
 import { motion, AnimatePresence } from 'framer-motion';
+import { relativeBold, relativeBook } from '@/fonts';
 
 interface ProjectShowcaseProps {
   projects: Project[];
@@ -17,8 +18,8 @@ export default function ProjectShowcase({ projects, titlePositions }: ProjectSho
   };
 
   return (
-    <div className="w-full max-w-7xl mx-auto bg-black text-white p-8 rounded-3xl overflow-hidden">
-      <div className="relative mb-8" style={{ height: '200px' }}>
+    <div className={`w-full max-w-7xl mx-auto bg-black text-white p-8 rounded-3xl overflow-hidden ${relativeBook.className}`}>
+      <div className="relative mb-8" style={{ height: '170px' }}> {/* Ajusta la altura si es necesario */}
         <AnimatePresence mode="wait">
           <motion.div
             key={selectedIndex}
@@ -28,12 +29,16 @@ export default function ProjectShowcase({ projects, titlePositions }: ProjectSho
             transition={{ duration: 0.3 }}
             className="absolute bottom-2"
           >
-            <h1 className="text-8xl font-bold mb-1">{projects[selectedIndex].title}</h1>
-            <p className="text-3xl">{projects[selectedIndex].description}</p>
+            <h1 className={`text-5xl font-bold mb-1 leading-tight ${relativeBold.className}`}> {/* Título grande */}
+              {projects[selectedIndex].title}
+            </h1>
+            <p className={`text-2xl leading-normal ${relativeBook.className}`}> {/* Descripción más grande */}
+              {projects[selectedIndex].description}
+            </p>
           </motion.div>
         </AnimatePresence>
       </div>
-      
+
       <div className="flex gap-3 h-[480px]">
         {projects.map((project, index) => (
           <motion.div
@@ -65,12 +70,12 @@ export default function ProjectShowcase({ projects, titlePositions }: ProjectSho
                 >
                   <div className="absolute bottom-6 left-6 flex gap-2">
                     {project.tags.map((tag) => (
-                      <span key={tag} className="bg-gray-800 text-white text-xs font-semibold px-3 py-1 rounded-full">
+                      <span key={tag} className={`bg-gray-800 text-white text-xs font-semibold px-3 py-1 rounded-full ${relativeBook.className}`}>
                         {tag}
                       </span>
                     ))}
                   </div>
-                  <button className="bg-white text-black text-xl font-semibold py-4 px-8 rounded-full hover:bg-opacity-90 transition-colors duration-300 self-end">
+                  <button className={`bg-white text-black text-xl font-semibold py-4 px-8 rounded-full hover:bg-opacity-90 transition-colors duration-300 self-end ${relativeBold.className}`}>
                     Ver →
                   </button>
                 </motion.div>
