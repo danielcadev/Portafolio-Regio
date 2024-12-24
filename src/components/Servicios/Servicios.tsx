@@ -49,20 +49,6 @@ export default function Servicios() {
 
         {/* Acordeón de Experiencia */}
         <ExperienciaAcordeon />
-
-        {/* Llamada a la Acción */}
-        <motion.div
-          className="mt-16 md:mt-20 text-center"
-          whileHover={{ scale: 1.05 }}
-          whileTap={{ scale: 0.95 }}
-        >
-          <Button
-            size="lg"
-            className="bg-blue-500 hover:bg-blue-600 text-white px-8 py-4 rounded-full"
-          >
-            <span className={`${relativeMedium.className}`}>Contáctame</span>
-          </Button>
-        </motion.div>
       </div>
     </div>
   );
