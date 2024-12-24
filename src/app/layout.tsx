@@ -2,7 +2,7 @@ import type { Metadata } from 'next';
 import './globals.css';
 import { Navbar } from '@/components/Layout/Navbar';
 import Footer from '@/components/Layout/Footer';
-import { AceternityDock } from '@/components/Layout/AceternityDock';
+
 import { relativeBook } from '@/fonts';
 
 export const metadata: Metadata = {
@@ -38,7 +38,6 @@ export default function RootLayout({
         <Navbar />
         <main className="flex-grow">{children}</main>
         <Footer />
-        <AceternityDock />
       </body>
     </html>
   );

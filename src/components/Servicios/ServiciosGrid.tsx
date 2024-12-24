@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { motion } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
 import { BadgeCheck, Code, Smartphone, ChevronDown } from "lucide-react";
 import { relativeBold, relativeBook } from "@/fonts";
 
@@ -56,7 +56,6 @@ const servicios: Servicio[] = [
 
 const ServiciosGrid = () => {
   const [expanded, setExpanded] = useState<number | null>(null);
-  const [hoveredService, setHoveredService] = useState<number | null>(null); // Definimos setHoveredService
 
   const toggleAccordion = (index: number) => {
     setExpanded((prev) => (prev === index ? null : index));
@@ -68,44 +67,56 @@ const ServiciosGrid = () => {
         {servicios.map((service, index) => (
           <motion.div
             key={index}
-            className="p-6 md:p-8 rounded-lg bg-black border border-slate-800 relative overflow-hidden"
+            className="p-6 md:p-8 rounded-lg bg-black border border-slate-800 relative overflow-hidden cursor-pointer"
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5, delay: index * 0.1 }}
-            onMouseEnter={() => setHoveredService(index)} // Usamos setHoveredService
-            onMouseLeave={() => setHoveredService(null)} // Usamos setHoveredService
             onClick={() => toggleAccordion(index)}
           >
-            {/* Superposición con detalles al hacer hover o clic */}
-            <motion.div
-              className="absolute inset-0 bg-gradient-to-r from-blue-500 to-purple-600 opacity-0 hover:opacity-25 transition-opacity duration-300 rounded-lg"
-              initial={{ opacity: 0 }}
-              animate={{ opacity: expanded === index ? 0.25 : 0 }} // Corregido para usar expanded
-            >
-              <ul className={`absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 text-white list-disc list-inside space-y-2 ${relativeBook.className} w-full p-4`}>
-                {service.details.map((detail) => (
-                  <motion.li
-                  key={detail}
-                  initial={{ opacity: 0, x: -10 }}
-                  animate={{ opacity: 1, x: 0 }}
-                  transition={{ duration: 0.3, delay: 0.1 }}
-                  className="text-white"
-                  >
-                    {detail}
-                  </motion.li>
-                ))}
-              </ul>
-            </motion.div>
+            {/* Superposición con detalles al expandir */}
+            <AnimatePresence>
+              {expanded === index && (
+                <motion.ul
+                  className="absolute inset-0 bg-black bg-opacity-90 flex flex-col justify-center items-start p-6 rounded-lg z-20"
+                  initial={{ opacity: 0, height: 0 }}
+                  animate={{ opacity: 1, height: "auto" }}
+                  exit={{ opacity: 0, height: 0 }}
+                  transition={{ duration: 0.3, ease: "easeInOut" }}
+                >
+                  {service.details.map((detail) => (
+                    <motion.li
+                      key={detail}
+                      className="text-white list-disc list-inside mb-2"
+                      initial={{ opacity: 0, x: -10 }}
+                      animate={{ opacity: 1, x: 0 }}
+                      transition={{ duration: 0.3, delay: 0.1 }}
+                    >
+                      {detail}
+                    </motion.li>
+                  ))}
+                  <div className="mt-4 flex justify-center w-full">
+                    <ChevronDown
+                      className="text-blue-500 animate-bounce"
+                      size={24}
+                    />
+                  </div>
+                </motion.ul>
+              )}
+            </AnimatePresence>
 
             {/* Contenido visible */}
             <div className="relative z-10">
               <div className="flex flex-col items-center mb-4">
                 <span className="mb-2">{service.icon}</span>
-                <h3 className={`text-xl md:text-2xl font-bold text-white ${relativeBold.className} text-center`}>
+                <h3
+                  className={`text-xl md:text-2xl font-bold text-white ${relativeBold.className} text-center`}
+                >
                   {service.title}
                 </h3>
               </div>
-              <p className={`text-neutral-300 text-center ${relativeBook.className} mb-4`}>
+              <p
+                className={`text-neutral-300 text-center ${relativeBook.className} mb-4`}
+              >
                 {service.description}
               </p>
               {/* Indicador de expansión */}
