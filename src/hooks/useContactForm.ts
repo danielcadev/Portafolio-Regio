@@ -3,7 +3,7 @@ import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { contactFormSchema, type ContactFormData } from '@/shemas/contactForm';
-import { useRecaptcha } from '@/hooks/useRecaptcha';
+import { useRecaptcha } from './useRecaptcha';
 
 interface UseContactFormReturn {
   form: ReturnType<typeof useForm<ContactFormData>>;
@@ -55,8 +55,8 @@ export function useContactForm(): UseContactFormReturn {
       setIsSuccess(true);
       form.reset();
     } catch (error) {
-      setIsError(true);
       console.error('Error:', error);
+      setIsError(true);
     } finally {
       setIsLoading(false);
     }
