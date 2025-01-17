@@ -1,27 +1,26 @@
+// app/page.tsx
 import React from 'react';
 import Hero from '@/components/MainPage/Hero';
 import ProjectShowcase from '@/components/MainPage/ProjectShowcase';
-import { getProjects } from '@/data/projects';
-import HeroHighlightDemo  from '@/components/MainPage/TitleHighlight';
+import ServicesSection from '@/components/MainPage/ServicesSection';
+
 
 export default function MainPage() {
-  const projects = getProjects()
-  const titlePositions = [0, 220, 440];
-
   return (
+    <div className="min-h-screen bg-[#E5E5E5]">
+      <main>
+        <section id="hero">
+          <Hero />
+        </section>
 
-      <div className="flex flex-col min-h-screen">
-        <main className="flex-grow">
-          <section id="hero">
-            <Hero />
-          </section>
+        <section id="projects">
+          <ProjectShowcase />
+        </section>
 
-          <section id="projects" className="py-4">
-            <ProjectShowcase titlePositions={titlePositions} projects={projects} />
-            <HeroHighlightDemo />
-          </section>
-        </main>
-      </div>
-
+        <section>
+         <ServicesSection />
+        </section>
+      </main>
+    </div>
   );
 }

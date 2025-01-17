@@ -1,20 +1,15 @@
 "use client";
-import {
-  useMotionValueEvent,
-  useScroll,
-  useTransform,
-  motion,
-} from "framer-motion";
-import React, { useEffect, useRef, useState } from "react";
-import { relativeBook } from "@/fonts"; // Asegúrate de que la ruta a tu archivo de fuentes sea correcta
-import Image from "next/image";
 
-interface TimelineEntry {
-  title: string;
-  content: React.ReactNode;
+import { useScroll, useTransform, motion } from "framer-motion";
+import { useEffect, useRef, useState } from "react";
+import { TimelineEntry } from '@/types/timeline';
+import Image from 'next/image';
+
+interface TimelineProps {
+  data: TimelineEntry[];
 }
 
-export const Timeline = ({ data }: { data: TimelineEntry[] }) => {
+export const Timeline = ({ data }: TimelineProps) => {
   const ref = useRef<HTMLDivElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
   const [height, setHeight] = useState(0);
@@ -43,56 +38,150 @@ export const Timeline = ({ data }: { data: TimelineEntry[] }) => {
   const heightTransform = useTransform(scrollYProgress, [0, 1], [0, height]);
   const opacityTransform = useTransform(scrollYProgress, [0, 0.1], [0, 1]);
 
-  return (
-    <div
-      className={`w-full text-neutral-200 font-sans md:px-10 ${relativeBook.className}`}
-      ref={containerRef}
-    >
-      <div className="max-w-7xl mx-auto py-20 px-4 md:px-8 lg:px-10">
-        <h2 className="text-lg md:text-4xl mb-4 text-white font-bold max-w-4xl">
-          Sobre nosotros
-        </h2>
-        <p className="text-neutral-300 text-sm md:text-base max-w-sm">
-          Descubre la evolución y los logros de Regiossoft a lo largo de los
-          años.
-        </p>
-      </div>
+  const renderContent = (content: TimelineEntry['content'], index: number) => {
+    return (
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: true }}
+        transition={{ duration: 0.8, delay: 0.2 }}
+      >
+        <div className="relative">
+          {/* Gradient overlay for text */}
+          <div className="absolute -inset-4 bg-white/5 backdrop-blur-sm rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+          
+          <p 
+            className="text-[#181717] text-base md:text-lg font-normal mb-8 relative"
+            dangerouslySetInnerHTML={{
+              __html: content.highlights?.reduce((acc, highlight) => {
+                return acc.replace(
+                  highlight,
+                  `<strong class="text-[#181717] relative after:absolute after:bottom-0 after:left-0 after:w-full after:h-[2px] after:bg-[#181717]/10">${highlight}</strong>`
+                );
+              }, content.text) || content.text
+            }}
+          />
 
-      <div ref={ref} className="relative max-w-7xl mx-auto pb-20">
+          {content.image && (
+            <motion.div
+              initial={{ opacity: 0, scale: 0.95 }}
+              whileInView={{ opacity: 1, scale: 1 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.5, delay: 0.3 }}
+            >
+              <Image
+                src={content.image.src}
+                alt={content.image.alt}
+                width={content.image.width}
+                height={content.image.height}
+                className="rounded-2xl object-cover h-20 md:h-44 lg:h-60 w-full shadow-[0_8px_30px_rgb(0,0,0,0.06)] transition-transform duration-300 hover:scale-[1.02]"
+              />
+            </motion.div>
+          )}
+
+          {content.images && (
+            <div className="grid grid-cols-2 gap-6">
+              {content.images.map((image, imgIndex) => (
+                <motion.div
+                  key={imgIndex}
+                  initial={{ opacity: 0, scale: 0.95 }}
+                  whileInView={{ opacity: 1, scale: 1 }}
+                  viewport={{ once: true }}
+                  transition={{ duration: 0.5, delay: 0.2 * imgIndex }}
+                >
+                  {image.url ? (
+                    <a 
+                      href={image.url}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="block overflow-hidden rounded-2xl group"
+                    >
+                      <Image
+                        src={image.src}
+                        alt={image.alt}
+                        width={image.width}
+                        height={image.height}
+                        className="rounded-2xl object-cover h-20 md:h-44 lg:h-60 w-full shadow-[0_8px_30px_rgb(0,0,0,0.06)] transition-all duration-300 group-hover:scale-105"
+                      />
+                    </a>
+                  ) : (
+                    <Image
+                      src={image.src}
+                      alt={image.alt}
+                      width={image.width}
+                      height={image.height}
+                      className="rounded-2xl object-cover h-20 md:h-44 lg:h-60 w-full shadow-[0_8px_30px_rgb(0,0,0,0.06)] transition-transform duration-300 hover:scale-[1.02]"
+                    />
+                  )}
+                </motion.div>
+              ))}
+            </div>
+          )}
+
+          {content.additionalText && (
+            <motion.p 
+              className="text-[#181717] text-base md:text-lg font-normal mt-8"
+              initial={{ opacity: 0 }}
+              whileInView={{ opacity: 1 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.5, delay: 0.4 }}
+            >
+              {content.additionalText}
+            </motion.p>
+          )}
+        </div>
+      </motion.div>
+    );
+  };
+
+  return (
+    <div ref={containerRef} className="relative">
+      {/* Background gradient */}
+      <div className="absolute inset-0 bg-gradient-to-b from-transparent via-white/5 to-transparent" />
+
+      <div ref={ref} className="relative w-[1120px] mx-auto pb-20 mt-24">
         {data.map((item, index) => (
-          <div
+          <motion.div
             key={index}
-            className="flex justify-start pt-10 md:pt-40 md:gap-10"
+            className="flex justify-start pt-10 md:pt-40 md:gap-10 group"
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.5, delay: 0.1 * index }}
           >
             <div className="sticky flex flex-col md:flex-row z-40 items-center top-40 self-start max-w-xs lg:max-w-sm md:w-full">
-              <div className="h-10 absolute left-3 md:left-3 w-10 rounded-full bg-black flex items-center justify-center">
-                <div className="h-4 w-4 rounded-full bg-neutral-700 border border-neutral-500 p-2" />
-              </div>
-              <h3 className="hidden md:block text-xl md:pl-20 md:text-5xl font-bold text-white">
+              <motion.div 
+                className="h-10 absolute -left-5 w-10 rounded-full bg-[#181717] flex items-center justify-center"
+                whileHover={{ scale: 1.1 }}
+                transition={{ type: "spring", stiffness: 300, damping: 20 }}
+              >
+                <div className="h-4 w-4 rounded-full bg-[#E5E5E5] border border-[#181717] p-2" />
+              </motion.div>
+              <h3 className="hidden md:block text-xl md:pl-16 md:text-5xl font-bold text-[#181717] opacity-90 hover:opacity-100 transition-opacity">
                 {item.title}
               </h3>
             </div>
 
             <div className="relative pl-20 pr-4 md:pl-4 w-full">
-              <h3 className="md:hidden block text-2xl mb-4 text-left font-bold text-white">
+              <h3 className="md:hidden block text-2xl mb-4 text-left font-bold text-[#181717]">
                 {item.title}
               </h3>
-              {item.content}
+              {renderContent(item.content, index)}
             </div>
-          </div>
+          </motion.div>
         ))}
+        
+        {/* Timeline line */}
         <div
-          style={{
-            height: height + "px",
-          }}
-          className="absolute md:left-8 left-8 top-0 overflow-hidden w-[2px] bg-gradient-to-b from-transparent via-neutral-800 to-transparent"
+          style={{ height: height + "px" }}
+          className="absolute left-0 top-0 overflow-hidden w-[1px] bg-gradient-to-b from-transparent via-[#181717] to-transparent"
         >
           <motion.div
             style={{
               height: heightTransform,
               opacity: opacityTransform,
             }}
-            className="absolute inset-x-0 top-0 w-[2px] bg-gradient-to-b from-purple-500 via-blue-500 to-transparent rounded-full"
+            className="absolute inset-x-0 top-0 w-[1px] bg-[#181717] rounded-full"
           />
         </div>
       </div>

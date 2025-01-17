@@ -1,89 +1,103 @@
-"use client"
-import React, { useState } from 'react';
+// components/ProjectShowcase/ProjectShowcase.tsx
+'use client'
+
+import { motion } from 'framer-motion';
 import Image from 'next/image';
-import { Project } from '@/types/Project';
-import { motion, AnimatePresence } from 'framer-motion';
-import { relativeBold, relativeBook } from '@/fonts';
+import styles from '@/styles/Hero/ProjectShowcase.module.css';
+import { Button } from "@/components/ui/button";
 
-interface ProjectShowcaseProps {
-  projects: Project[];
-  titlePositions: number[]; // Array de posiciones personalizadas para el título
-}
+const projects = [
+  {
+    title: "Mitiquete",
+    image: "/IMG_Proyectos/64a66afbd65c2f2ec1f1019b_arkitect-p-800.webp",
+    className: styles.imageLeftCenter,
+    url: "https://mitiquete.net"
+  },
+  {
+    title: "Proyecto Principal",
+    image: "/IMG_Proyectos/64a668db08bc7f2ce51b4c02_bent-p-800.webp",
+    className: styles.imageCenter,
+    url: "#"
+  },
+  {
+    title: "Otro Proyecto",
+    image: "/IMG_Proyectos/64a668d99d7dd2e330fd9d1d_fylla-p-800.webp",
+    className: styles.imageRightCenter,
+    url: "#"
+  }
+];
 
-export default function ProjectShowcase({ projects, titlePositions }: ProjectShowcaseProps) {
-  const [selectedIndex, setSelectedIndex] = useState(0);
-
-  const handleProjectClick = (index: number) => {
-    setSelectedIndex(index);
-  };
-
+// components/ProjectShowcase/ProjectShowcase.tsx
+export default function ProjectShowcase() {
   return (
-    <div className={`w-full max-w-7xl mx-auto bg-black text-white p-8 rounded-3xl overflow-hidden ${relativeBook.className}`}>
-      <div className="relative mb-8" style={{ height: '170px' }}> {/* Ajusta la altura si es necesario */}
-        <AnimatePresence mode="wait">
-          <motion.div
-            key={selectedIndex}
-            initial={{ opacity: 0, x: -20 }}
-            animate={{ opacity: 1, x: titlePositions[selectedIndex] }}
-            exit={{ opacity: 0, x: 20 }}
-            transition={{ duration: 0.3 }}
-            className="absolute bottom-2"
-          >
-            <h1 className={`text-5xl font-bold mb-1 leading-tight ${relativeBold.className}`}> {/* Título grande */}
-              {projects[selectedIndex].title}
-            </h1>
-            <p className={`text-2xl leading-normal ${relativeBook.className}`}> {/* Descripción más grande */}
-              {projects[selectedIndex].description}
-            </p>
-          </motion.div>
-        </AnimatePresence>
+    <section className="w-full overflow-hidden py-32"> {/* Más padding vertical */}
+      {/* Header con más impacto */}
+      <div className="max-w-[1120px] mx-auto text-center mb-32"> {/* Más espacio abajo */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          className="space-y-8"
+        >
+          <h2 className="text-[120px] leading-none font-medium text-[#181717] mb-8"> {/* Título más grande */}
+            Nuestros
+            <br />
+            <span className="text-[#181717]/40">Proyectos</span> {/* Efecto de fade en la segunda línea */}
+          </h2>
+          <p className="text-2xl text-[#181717]/60 max-w-2xl mx-auto mb-12"> {/* Descripción más grande */}
+            Explora nuestra colección de soluciones digitales que transforman ideas en experiencias
+          </p>
+          <div className="flex gap-6 justify-center">
+            <Button
+              size="lg"
+              className="px-8 py-6 bg-[#181717] text-white text-lg hover:bg-[#181717]/90"
+            >
+              Ver Todos los Proyectos →
+            </Button>
+            <Button
+              size="lg"
+              variant="outline"
+              className="px-8 py-6 border-[#181717]/10 text-lg text-[#181717] hover:bg-[#181717]/5"
+            >
+              Contactar
+            </Button>
+          </div>
+        </motion.div>
       </div>
 
-      <div className="flex gap-3 h-[480px]">
+
+      {/* Galería de Proyectos */}
+      <div className={styles.imageContainer}>
         {projects.map((project, index) => (
-          <motion.div
-            key={project.id}
-            layout
-            onClick={() => handleProjectClick(index)}
-            className={`cursor-pointer overflow-hidden relative rounded-3xl ${
-              index === selectedIndex ? 'w-[66%]' : 'w-[17%]'
-            }`}
-            animate={{
-              width: index === selectedIndex ? '66%' : '17%',
-            }}
-            transition={{ duration: 0.5, ease: "easeInOut" }}
+          <motion.a
+            key={project.title}
+            href={project.url}
+            target="_blank"
+            rel="noopener noreferrer"
+            className={project.className}
+            initial={{ opacity: 0, x: 50 }}
+            whileInView={{ opacity: 1, x: 0 }}
+            viewport={{ once: true }}
+            transition={{ delay: index * 0.2 }}
           >
-            <div className="relative w-full h-full">
-              <Image
-                src={project.mainImage}
-                alt={project.title}
-                fill
-                className="object-cover"
-              />
-              {index === selectedIndex && (
-                <motion.div
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 1 }}
-                  exit={{ opacity: 0 }}
-                  transition={{ duration: 0.3 }}
-                  className="absolute inset-0 p-6 flex flex-col justify-end"
-                >
-                  <div className="absolute bottom-6 left-6 flex gap-2">
-                    {project.tags.map((tag) => (
-                      <span key={tag} className={`bg-gray-800 text-white text-xs font-semibold px-3 py-1 rounded-full ${relativeBook.className}`}>
-                        {tag}
-                      </span>
-                    ))}
-                  </div>
-                  <button className={`bg-white text-black text-xl font-semibold py-4 px-8 rounded-full hover:bg-opacity-90 transition-colors duration-300 self-end ${relativeBold.className}`}>
-                    Ver →
-                  </button>
-                </motion.div>
-              )}
+            <Image
+              src={project.image}
+              alt={project.title}
+              fill
+              priority
+              className={styles.image}
+              sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+            />
+            <div className="absolute inset-0 bg-black/30 opacity-0 hover:opacity-100 transition-opacity duration-300 rounded-2xl">
+              <div className="absolute bottom-0 left-0 right-0 p-6">
+                <h3 className="text-2xl font-medium text-white">
+                  {project.title}
+                </h3>
+              </div>
             </div>
-          </motion.div>
+          </motion.a>
         ))}
       </div>
-    </div>
+    </section>
   );
 }

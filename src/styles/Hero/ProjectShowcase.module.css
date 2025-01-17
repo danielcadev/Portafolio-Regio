@@ -1,0 +1,40 @@
+.imageContainer {
+  position: relative;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 466px;
+  overflow-x: hidden;
+}
+
+.imageWrapper {
+  position: relative;
+  flex-shrink: 0;
+  margin: 0 -2%;
+  transition: all 0.5s ease;
+}
+
+.imageLeftCenter {
+  composes: imageWrapper;
+  width: 600px;
+  height: 400px;
+  z-index: 3;
+  margin-top: 66px;
+}
+
+.imageCenter {
+  composes: imageWrapper;
+  width: 700px;
+  height: 466px;
+  z-index: 5;
+}
+
+.imageRightCenter {
+  composes: imageWrapper;
+  width: 600px;
+  height: 400px;
+  z-index: 1;
+  margin-top: 66px;
+}

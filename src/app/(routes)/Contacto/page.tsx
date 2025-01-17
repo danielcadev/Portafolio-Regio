@@ -1,11 +1,16 @@
-import ContactForm from "@/components/Contact/ContactForm";
+// app/contact/page.tsx
+import { Metadata } from "next";
+import { ContactWrapper } from "@/components/Contact/ContactWrapper";
+
+export const metadata: Metadata = {
+  title: 'Contacto | Regiossoft',
+  description: 'Contáctanos para discutir tu próximo proyecto. Estamos aquí para ayudarte a hacer realidad tus ideas.',
+};
 
 export default function ContactPage() {
   return (
-    <div className="relative w-full min-h-screen flex flex-col items-center justify-center">
-      <div className="w-full max-w-3xl p-8">
-        <ContactForm />
-      </div>
-    </div>
+    <main className="min-h-screen bg-[#E5E5E5]">
+      <ContactWrapper />
+    </main>
   );
 }

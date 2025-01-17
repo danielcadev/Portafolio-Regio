@@ -1,60 +1,86 @@
 'use client'
 
-import React, { useRef, useEffect } from 'react';
+import { useRef, useEffect, ReactNode } from 'react';
 import { twMerge } from 'tailwind-merge';
 
 interface CarouselItem {
+  icon: ReactNode;
   text: string;
 }
 
 interface AutoScrollCarouselProps {
   items: CarouselItem[];
   className?: string;
-  speed?: number; // Velocidad en píxeles por segundo
+  speed?: number;
 }
 
-export const AutoScrollCarousel: React.FC<AutoScrollCarouselProps> = ({ 
+export function AutoScrollCarousel({ 
   items, 
   className,
-  speed = 50 // Valor predeterminado más alto para un movimiento más rápido
-}) => {
+  speed = 50
+}: AutoScrollCarouselProps) {
   const scrollRef = useRef<HTMLDivElement>(null);
+  const containerRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     const scrollElement = scrollRef.current;
-    if (!scrollElement) return;
+    const containerElement = containerRef.current;
+    if (!scrollElement || !containerElement) return;
 
     let animationFrameId: number;
-    let startTime: number | null = null;
+    let position = 0;
 
-    const animate = (timestamp: number) => {
-      if (!startTime) startTime = timestamp;
-      const progress = timestamp - startTime;
-      const translateX = (progress * speed / 1000) % (scrollElement.scrollWidth / 2);
-      
-      scrollElement.style.transform = `translateX(-${translateX}px)`;
-
+    const animate = () => {
+      position += speed * 0.015;
+      scrollElement.style.transform = `translateX(-${position}px)`;
       animationFrameId = requestAnimationFrame(animate);
     };
 
     animationFrameId = requestAnimationFrame(animate);
 
-    return () => cancelAnimationFrame(animationFrameId);
+    const handleMouseEnter = () => {
+      cancelAnimationFrame(animationFrameId);
+    };
+
+    const handleMouseLeave = () => {
+      animationFrameId = requestAnimationFrame(animate);
+    };
+
+    containerElement.addEventListener('mouseenter', handleMouseEnter);
+    containerElement.addEventListener('mouseleave', handleMouseLeave);
+
+    return () => {
+      cancelAnimationFrame(animationFrameId);
+      containerElement.removeEventListener('mouseenter', handleMouseEnter);
+      containerElement.removeEventListener('mouseleave', handleMouseLeave);
+    };
   }, [speed, items]);
 
   return (
-    <div className={twMerge('overflow-hidden whitespace-nowrap', className)}>
+    <div 
+      ref={containerRef}
+      className={twMerge(
+        'overflow-hidden  py-8', // Fondo negro y más padding
+        className
+      )}
+    >
       <div 
         ref={scrollRef} 
-        className="inline-block"
+        className="inline-flex items-center gap-20 transition-transform" // Más gap
         style={{ willChange: 'transform' }}
       >
-        {[...items, ...items].map((item, index) => (
-          <span key={index} className="inline-block px-4">
-            {item.text}
-          </span>
+        {[...items, ...items, ...items, ...items, ...items].map((item, index) => (
+          <div
+            key={index}
+            className="inline-flex items-center gap-4 opacity-60 hover:opacity-100 transition-all duration-500"
+          >
+            <div className="text-4xl text-[#181717]">{item.icon}</div>
+            <span className="text-[#181717] text-lg font-medium whitespace-nowrap">
+              {item.text}
+            </span>
+          </div>
         ))}
       </div>
     </div>
   );
-};
+}

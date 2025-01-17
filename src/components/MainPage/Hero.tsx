@@ -1,52 +1,69 @@
-import Spline from '@splinetool/react-spline/next';
+// components/MainPage/Hero.tsx
 import { AutoScrollCarousel } from '@/components/ui/AutoScrollCarousel';
-import { relativeMono10 } from '@/fonts';
+import LandingHero from '@/components/MainPage/LandingHero';
+import { 
+  FaReact, 
+  FaWordpress 
+} from "react-icons/fa";
+import { 
+  TbBrandNextjs,
+  TbBrandTypescript,
+  TbBrandPrisma,
+  TbBrandTailwind,
+  TbBrandVercel
+} from "react-icons/tb";
+import { BiLogoReact } from "react-icons/bi";
 
 const carouselItems = [
-  { text: "💡" },
-  { text: 'Innovación Digital' },
-  { text: "🚀" },
-  { text: 'Desarrollo Web Avanzado' },
-  { text: "📱" },
-  { text: 'Apps Móviles' },
-  { text: "🤖" },
-  { text: 'Automatización IoT' },
-  { text: "🔧" },
-  { text: 'Ingeniería Mecatrónica' },
-  { text: "🎨" },
-  { text: 'Diseño Gráfico' },
-  { text: "📊" },
-  { text: 'Marketing Digital' },
-  { text: "🌐" },
-  { text: 'Soluciones Tecnológicas' },
-  { text: "🔒" },
-  { text: 'Seguridad Informática' },
-  { text: "⚡" },
-  { text: 'Optimización de Procesos' },
-  { text: "🌟" },
-  { text: 'UX Excepcional' },
-  { text: "🛠️" },
-  { text: 'Desarrollo Ágil' }
+  { 
+    icon: <TbBrandNextjs className="text-2xl" />,
+    text: "Next.js"
+  },
+  { 
+    icon: <FaReact className="text-2xl" />,
+    text: "React"
+  },
+  { 
+    icon: <TbBrandTypescript className="text-2xl" />,
+    text: "TypeScript"
+  },
+  { 
+    icon: <TbBrandTailwind className="text-2xl" />,
+    text: "Tailwind CSS"
+  },
+  { 
+    icon: <FaWordpress className="text-2xl" />,
+    text: "WordPress"
+  },
+  { 
+    icon: <BiLogoReact className="text-2xl" />,
+    text: "React Native"
+  },
+  { 
+    icon: <TbBrandPrisma className="text-2xl" />,
+    text: "Prisma"
+  },
+  { 
+    icon: <TbBrandVercel className="text-2xl" />,
+    text: "Vercel"
+  }
 ];
 
 export default function Hero() {
   return (
-    <main className="relative">
-      <div className="w-full h-screen">
-        <Spline
-          scene="https://prod.spline.design/OPORljqQ7K8Yhi0p/scene.splinecode"
-          className="w-full h-full"
-        />
-      </div>
-      <div className="absolute left-0 right-0 bottom-10"> {/* Ajusta 'bottom-1/4' según necesites */}
-        <div className={`w-full ${relativeMono10.className}`}>
+    <div className="relative min-h-screen bg-[#E5E5E5] overflow-clip"> {/* Añadido overflow-clip */}
+      <LandingHero />
+      
+      {/* Contenedor para el carrusel con z-index más bajo */}
+      <div className="absolute left-0 right-0 bottom-0 z-0"> {/* z-0 para que quede debajo de los efectos */}
+        <div className="relative">
           <AutoScrollCarousel
             items={carouselItems}
-            speed={100}
-            className="text-sm py-3 bg-black bg-opacity-50 text-white"
+            speed={80}
+            className="py-8"
           />
         </div>
       </div>
-    </main>
+    </div>
   );
 }

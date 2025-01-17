@@ -1,9 +1,14 @@
-import Servicios from '@/components/Servicios/Servicios'; // Asegúrate de que la ruta al componente sea correcta
+// app/servicios/page.tsx
+"use client";
 
-export default function ServiciosPage() {
+import HeroServicios from "@/components/Servicios/HeroServicios";
+import PricingSection from "@/components/Servicios/PricingSection";
+
+export default function Servicios() {
   return (
-    <div>
-      <Servicios />
-    </div>
+    <main className="bg-[#E5E5E5] min-h-screen">
+      <HeroServicios />
+      <PricingSection />
+    </main>
   );
 }

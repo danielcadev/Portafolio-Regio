@@ -2,28 +2,11 @@
 @tailwind components;
 @tailwind utilities;
 
-:root {
-  /* Define la variable para la fuente Relative Book */
-  --font-relative-book: relative-book; /* El nombre que usaste en fonts.ts */
-
-  /* Si vas a usar las otras fuentes (relativeBold, relativeMedium, etc.), define también sus variables */
-  --font-relative-bold: relative-bold;
-  --font-relative-medium: relative-medium;
-  /* ... otras variables de fuentes */
-}
-
 body {
-  /* Aplica la fuente Relative Book al body */
-  font-family: var(--font-relative-book), sans-serif;
-  background-color: black; /* O el color de fondo que tengas */
+  background-color: #F3F3F3;
 }
 
-h1,
-h2,
-h3 {
-  /* Si quieres que los encabezados usen una fuente diferente, como relativeBold, aplícala aquí */
-  font-family: var(--font-relative-bold), sans-serif;
-}
+
 
 /* Resto de tus estilos (no necesitas cambiar nada aquí si ya estaban funcionando) */
 @layer base {
