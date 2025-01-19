@@ -74,13 +74,13 @@ export const Timeline = ({ data }: TimelineProps) => {
                 alt={content.image.alt}
                 width={content.image.width}
                 height={content.image.height}
-                className="rounded-2xl object-cover h-20 md:h-44 lg:h-60 w-full shadow-[0_8px_30px_rgb(0,0,0,0.06)] transition-transform duration-300 hover:scale-[1.02]"
+                className="rounded-xl md:rounded-2xl object-cover h-48 md:h-44 lg:h-60 w-full shadow-[0_8px_30px_rgb(0,0,0,0.06)] transition-transform duration-300 hover:scale-[1.02]"
               />
             </motion.div>
           )}
 
           {content.images && (
-            <div className="grid grid-cols-2 gap-6">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 md:gap-6">
               {content.images.map((image, imgIndex) => (
                 <motion.div
                   key={imgIndex}
@@ -94,14 +94,14 @@ export const Timeline = ({ data }: TimelineProps) => {
                       href={image.url}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="block overflow-hidden rounded-2xl group"
+                      className="block overflow-hidden rounded-xl md:rounded-2xl group"
                     >
                       <Image
                         src={image.src}
                         alt={image.alt}
                         width={image.width}
                         height={image.height}
-                        className="rounded-2xl object-cover h-20 md:h-44 lg:h-60 w-full shadow-[0_8px_30px_rgb(0,0,0,0.06)] transition-all duration-300 group-hover:scale-105"
+                        className="rounded-xl md:rounded-2xl object-cover h-48 md:h-44 lg:h-60 w-full shadow-[0_8px_30px_rgb(0,0,0,0.06)] transition-all duration-300 group-hover:scale-105"
                       />
                     </a>
                   ) : (
@@ -110,7 +110,7 @@ export const Timeline = ({ data }: TimelineProps) => {
                       alt={image.alt}
                       width={image.width}
                       height={image.height}
-                      className="rounded-2xl object-cover h-20 md:h-44 lg:h-60 w-full shadow-[0_8px_30px_rgb(0,0,0,0.06)] transition-transform duration-300 hover:scale-[1.02]"
+                      className="rounded-xl md:rounded-2xl object-cover h-48 md:h-44 lg:h-60 w-full shadow-[0_8px_30px_rgb(0,0,0,0.06)] transition-transform duration-300 hover:scale-[1.02]"
                     />
                   )}
                 </motion.div>
@@ -139,30 +139,30 @@ export const Timeline = ({ data }: TimelineProps) => {
       {/* Background gradient */}
       <div className="absolute inset-0 bg-gradient-to-b from-transparent via-white/5 to-transparent" />
 
-      <div ref={ref} className="relative w-[1120px] mx-auto pb-20 mt-24">
+      <div ref={ref} className="relative w-full max-w-[1120px] mx-auto pb-20 mt-24 px-4 md:px-0">
         {data.map((item, index) => (
           <motion.div
             key={index}
-            className="flex justify-start pt-10 md:pt-40 md:gap-10 group"
+            className="flex justify-start pt-10 md:pt-40 gap-4 md:gap-10 group"
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.5, delay: 0.1 * index }}
           >
-            <div className="sticky flex flex-col md:flex-row z-40 items-center top-40 self-start max-w-xs lg:max-w-sm md:w-full">
+            <div className="sticky flex flex-col md:flex-row z-40 items-start top-20 md:top-40 self-start max-w-xs lg:max-w-sm md:w-full">
               <motion.div 
-                className="h-10 absolute -left-5 w-10 rounded-full bg-[#181717] flex items-center justify-center"
+                className="h-8 md:h-10 w-8 md:w-10 rounded-full bg-[#181717] flex items-center justify-center absolute left-0 md:-left-5"
                 whileHover={{ scale: 1.1 }}
                 transition={{ type: "spring", stiffness: 300, damping: 20 }}
               >
-                <div className="h-4 w-4 rounded-full bg-[#E5E5E5] border border-[#181717] p-2" />
+                <div className="h-3 md:h-4 w-3 md:w-4 rounded-full bg-[#E5E5E5] border border-[#181717] p-2" />
               </motion.div>
               <h3 className="hidden md:block text-xl md:pl-16 md:text-5xl font-bold text-[#181717] opacity-90 hover:opacity-100 transition-opacity">
                 {item.title}
               </h3>
             </div>
 
-            <div className="relative pl-20 pr-4 md:pl-4 w-full">
+            <div className="relative pl-12 md:pl-20 pr-0 md:pr-4 w-full">
               <h3 className="md:hidden block text-2xl mb-4 text-left font-bold text-[#181717]">
                 {item.title}
               </h3>
@@ -174,7 +174,7 @@ export const Timeline = ({ data }: TimelineProps) => {
         {/* Timeline line */}
         <div
           style={{ height: height + "px" }}
-          className="absolute left-0 top-0 overflow-hidden w-[1px] bg-gradient-to-b from-transparent via-[#181717] to-transparent"
+          className="absolute left-4 md:left-0 top-0 overflow-hidden w-[1px] bg-gradient-to-b from-transparent via-[#181717] to-transparent"
         >
           <motion.div
             style={{

@@ -1,4 +1,5 @@
-import { Timeline } from "@/components/ui/timeline";
+// components/About-Us/TimeLineInfo.tsx
+import { Timeline } from "@/components/About-Us/Timeline"; // Cambia esta importación
 import { timelineData } from "@/data/timeline";
 import TitleHero from "./TitleHero";
 

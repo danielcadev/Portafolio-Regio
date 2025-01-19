@@ -60,22 +60,22 @@ export function AutoScrollCarousel({
     <div 
       ref={containerRef}
       className={twMerge(
-        'overflow-hidden  py-8', // Fondo negro y más padding
-        className
+        'overflow-hidden ', // Quitamos el padding de aquí
+        className // Ahora el className pasado tendrá prioridad
       )}
     >
       <div 
         ref={scrollRef} 
-        className="inline-flex items-center gap-20 transition-transform" // Más gap
+        className="inline-flex items-center gap-20 transition-transform"
         style={{ willChange: 'transform' }}
       >
         {[...items, ...items, ...items, ...items, ...items].map((item, index) => (
           <div
             key={index}
-            className="inline-flex items-center gap-4 opacity-60 hover:opacity-100 transition-all duration-500"
+            className="inline-flex items-center gap-2 md:gap-4 opacity-60 hover:opacity-100 transition-all duration-500"
           >
-            <div className="text-4xl text-[#181717]">{item.icon}</div>
-            <span className="text-[#181717] text-lg font-medium whitespace-nowrap">
+            <div className="text-2xl md:text-4xl text-[#181717]">{item.icon}</div>
+            <span className="text-[#181717] text-base md:text-lg font-medium whitespace-nowrap">
               {item.text}
             </span>
           </div>

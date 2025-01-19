@@ -51,18 +51,17 @@ const carouselItems = [
 
 export default function Hero() {
   return (
-    <div className="relative min-h-screen bg-[#E5E5E5] overflow-clip"> {/* Añadido overflow-clip */}
-      <LandingHero />
+    <div className="flex flex-col bg-[#E5E5E5]">
+      <div className="flex-1">
+        <LandingHero />
+      </div>
       
-      {/* Contenedor para el carrusel con z-index más bajo */}
-      <div className="absolute left-0 right-0 bottom-0 z-0"> {/* z-0 para que quede debajo de los efectos */}
-        <div className="relative">
-          <AutoScrollCarousel
-            items={carouselItems}
-            speed={80}
-            className="py-8"
-          />
-        </div>
+      <div className="w-full">
+        <AutoScrollCarousel
+          items={carouselItems}
+          speed={80}
+          className="py-2 md:py-8"
+        />
       </div>
     </div>
   );
