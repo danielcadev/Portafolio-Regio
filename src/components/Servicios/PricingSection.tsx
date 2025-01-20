@@ -3,6 +3,7 @@
 
 import { motion, useScroll, useTransform } from "framer-motion";
 import { pricingPlans } from "@/data/pricing";
+import Link from 'next/link';
 import { useRef } from "react";
 
 export default function PricingSection() {
@@ -168,24 +169,26 @@ export default function PricingSection() {
           ))}
         </motion.div>
 
-        {/* CTA Final */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          className="text-center mt-32"
-        >
-          <p className="text-black/60 text-xl mb-6">
-            ¿Buscas una solución personalizada?
-          </p>
-          <motion.button
-            whileHover={{ scale: 1.05 }}
-            whileTap={{ scale: 0.95 }}
-            className="px-12 py-6 bg-black text-white rounded-full text-xl font-medium"
-          >
-            Contactar →
-          </motion.button>
-        </motion.div>
+      {/* CTA Final */}
+<motion.div
+  initial={{ opacity: 0, y: 20 }}
+  whileInView={{ opacity: 1, y: 0 }}
+  viewport={{ once: true }}
+  className="text-center mt-32"
+>
+  <p className="text-black/60 text-xl mb-6">
+    ¿Buscas una solución personalizada?
+  </p>
+  <Link href="/Contacto">
+    <motion.button
+      whileHover={{ scale: 1.05 }}
+      whileTap={{ scale: 0.95 }}
+      className="px-12 py-6 bg-black text-white rounded-full text-xl font-medium"
+    >
+      Contactar →
+    </motion.button>
+  </Link>
+</motion.div>
         </motion.div>
     </motion.section>
   );
