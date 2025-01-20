@@ -1,85 +1,156 @@
+// components/HeroServicios.tsx
 "use client";
 
 import { motion } from "framer-motion";
+import { useEffect, useState } from "react";
+import { useAnimationStore } from '@/store/animations';
 
-const HeroServicios = () => {
+export default function HeroServicios() {
+  const [isClient, setIsClient] = useState(false);
+  const { hasAnimated, setHasAnimated } = useAnimationStore();
+
+  useEffect(() => {
+    setIsClient(true);
+    return () => setHasAnimated(true);
+  }, []);
+
   return (
-    <div className="w-full bg-[#E5E5E5] relative overflow-hidden">
-      {/* Gradient Backgrounds */}
-      <div className="absolute inset-0">
-        <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-gradient-to-r from-white to-transparent opacity-60 blur-3xl" />
-        <div className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-gradient-to-l from-white to-transparent opacity-60 blur-3xl" />
+    <div className="min-h-[90vh] w-full bg-[#E5E5E5] relative flex flex-col justify-center">
+      {!hasAnimated && (
+        <motion.div
+          initial={{ height: "100vh" }}
+          animate={{ height: "0vh" }}
+          transition={{ duration: 1, ease: [0.83, 0, 0.17, 1] }}
+          className="fixed inset-0 bg-black z-50"
+        />
+      )}
+
+      {/* Grid decorativo de fondo */}
+      <div className="absolute inset-0 grid grid-cols-6 grid-rows-6">
+        {Array.from({ length: 36 }).map((_, i) => (
+          <motion.div
+            key={i}
+            className="border-[0.5px] border-black/5"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ delay: i * 0.02 }}
+          />
+        ))}
       </div>
 
-      <div className="max-w-[1120px] mx-auto pt-32 pb-20 px-4 relative">
-        {/* Small label animation */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5 }}
-          className="mb-8 flex justify-center"
-        >
-          <span className="text-[#181717]/60 text-sm tracking-wider uppercase px-4 py-2 border border-[#181717]/10 rounded-full">
-            Nuestros Servicios
-          </span>
-        </motion.div>
-
-        {/* Main title with stagger animation */}
-        <div className="text-center mb-12">
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, delay: 0.2 }}
+      <div className="max-w-[1120px] mx-auto px-4 relative z-10">
+        <div className="flex flex-col items-start gap-12">
+          {/* Título principal */}
+          <motion.div 
+            initial={{ opacity: 0 }} 
+            animate={{ opacity: 1 }} 
+            transition={{ duration: 1, delay: 1 }}
+            className="w-full relative"
           >
-            <h1 className="text-[80px] text-[#181717] font-medium leading-[1.1] tracking-tight">
-              Soluciones
-              <br />
-              <span className="text-[#181717]/50">Digitales</span>
+            {/* Círculo decorativo */}
+            <motion.div
+              className="absolute -top-20 -left-20 w-40 h-40 rounded-full bg-black/5"
+              animate={{
+                scale: [1, 1.2, 1],
+                rotate: [0, 90, 0],
+              }}
+              transition={{
+                duration: 8,
+                repeat: Infinity,
+                ease: "linear",
+              }}
+            />
+
+            {/* Texto "Servicios" */}
+            <h1 className="text-8xl md:text-[180px] font-bold tracking-tight whitespace-nowrap overflow-hidden">
+              {Array.from("Servicios").map((letter, i) => (
+                <motion.span
+                  key={i}
+                  className="inline-block"
+                  initial={{ y: 400 }}
+                  animate={{ y: 0 }}
+                  transition={{
+                    duration: 1,
+                    delay: 0.8 + i * 0.1,
+                    ease: [0.33, 1, 0.68, 1],
+                  }}
+                >
+                  {letter}
+                </motion.span>
+              ))}
             </h1>
+
+            {/* Línea decorativa */}
+            <motion.div
+              className="h-[2px] bg-black/20 mt-8"
+              initial={{ width: 0 }}
+              animate={{ width: "100%" }}
+              transition={{ duration: 1, delay: 2 }}
+            />
+          </motion.div>
+
+          {/* Contenido descriptivo */}
+          <motion.div
+            className="max-w-2xl space-y-6"
+            initial={{ opacity: 0, x: -50 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ duration: 1, delay: 2 }}
+          >
+            <div className="flex items-center gap-4">
+              <div className="w-3 h-3 rounded-full bg-black/20" />
+              <p className="text-lg text-black/60">Diseño & Desarrollo</p>
+            </div>
+            <h2 className="text-4xl font-medium leading-tight">
+              Creamos soluciones digitales que transforman negocios
+            </h2>
+            <p className="text-lg text-black/60">
+              Combinamos estrategia, diseño y tecnología para crear experiencias digitales excepcionales.
+            </p>
+
+            {/* Tags animados */}
+            <div className="flex flex-wrap gap-3 pt-4">
+              {["Web", "Mobile", "UI/UX", "Branding", "Marketing"].map((tag, i) => (
+                <motion.span
+                  key={tag}
+                  className="px-4 py-2 bg-black/5 rounded-full text-sm"
+                  initial={{ opacity: 0, scale: 0.5 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  transition={{ delay: 2.5 + i * 0.1 }}
+                  whileHover={{ 
+                    scale: 1.05,
+                    backgroundColor: "rgba(0,0,0,0.1)" 
+                  }}
+                >
+                  {tag}
+                </motion.span>
+              ))}
+            </div>
           </motion.div>
         </div>
 
-        {/* Description with fade animation */}
+        {/* Indicador de scroll */}
         <motion.div
-          initial={{ opacity: 0, y: 20 }}
+          className="absolute bottom-10 left-1/2 transform -translate-x-1/2"
+          initial={{ opacity: 0, y: -20 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8, delay: 0.4 }}
-          className="max-w-2xl mx-auto text-center"
+          transition={{ delay: 3 }}
         >
-          <p className="text-[28px] text-[#181717]/70 leading-relaxed">
-            Transformamos ideas en experiencias digitales excepcionales, 
-            impulsando el crecimiento de su negocio con tecnología innovadora.
-          </p>
+          <div className="flex flex-col items-center gap-2">
+            <motion.div 
+              className="w-[1px] h-10 bg-black/20"
+              animate={{
+                scaleY: [0.3, 1, 0.3],
+              }}
+              transition={{
+                duration: 1.5,
+                repeat: Infinity,
+                ease: "easeInOut"
+              }}
+            />
+            <span className="text-sm text-black/40">Scroll</span>
+          </div>
         </motion.div>
-
-        {/* Decorative elements */}
-        <motion.div
-          className="absolute left-0 top-1/3 w-24 h-24 bg-gradient-to-r from-white to-transparent opacity-40 blur-2xl rounded-full"
-          animate={{
-            scale: [1, 1.2, 1],
-            opacity: [0.3, 0.5, 0.3],
-          }}
-          transition={{
-            duration: 4,
-            repeat: Infinity,
-            ease: "easeInOut",
-          }}
-        />
-        <motion.div
-          className="absolute right-0 bottom-1/3 w-32 h-32 bg-gradient-to-l from-white to-transparent opacity-40 blur-2xl rounded-full"
-          animate={{
-            scale: [1, 1.3, 1],
-            opacity: [0.4, 0.6, 0.4],
-          }}
-          transition={{
-            duration: 5,
-            repeat: Infinity,
-            ease: "easeInOut",
-          }}
-        />
       </div>
     </div>
   );
-};
-
-export default HeroServicios;
+}

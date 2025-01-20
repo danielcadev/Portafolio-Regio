@@ -3,6 +3,7 @@
 
 import { motion } from 'framer-motion';
 import { Button } from "@/components/ui/button";
+import Link from 'next/link';
 
 export function BottomCTA() {
   return (
@@ -37,13 +38,15 @@ export function BottomCTA() {
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
             >
-              <Button
-                size="lg"
-                className="bg-white text-[#181717] hover:bg-white/90 px-12 py-8 text-xl 
-                  rounded-full shadow-2xl hover:shadow-white/20"
-              >
-                Comenzar ahora →
-              </Button>
+              <Link href="/Servicios">
+                <Button
+                  size="lg"
+                  className="bg-white text-[#181717] hover:bg-white/90 px-12 py-8 text-xl 
+                    rounded-full shadow-2xl hover:shadow-white/20"
+                >
+                  Comenzar ahora →
+                </Button>
+              </Link>
             </motion.div>
           </motion.div>
         </div>

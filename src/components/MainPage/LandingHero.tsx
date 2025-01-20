@@ -4,6 +4,7 @@ import { motion, useScroll, useTransform } from 'framer-motion';
 import { useState, useEffect } from 'react';
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import Link from 'next/link';
 
 export default function LandingHero() {
     const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
@@ -155,30 +156,34 @@ export default function LandingHero() {
                         className="flex flex-col md:flex-row gap-4 md:gap-6 justify-center"
                     >
                         <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
-                            <Button
-                                size="lg"
-                                className="w-full md:w-auto md:px-8 md:py-6 bg-[#181717] text-white md:text-lg
-                                         hover:bg-[#181717]/90 transition-all duration-300 shadow-lg
-                                         hover:shadow-xl hover:shadow-black/20"
-                            >
-                                <motion.span
-                                    animate={{ x: [0, 5, 0] }}
-                                    transition={{ duration: 2, repeat: Infinity }}
+                            <Link href="/Servicios">
+                                <Button
+                                    size="lg"
+                                    className="w-full md:w-auto md:px-8 md:py-6 bg-[#181717] text-white md:text-lg
+                                             hover:bg-[#181717]/90 transition-all duration-300 shadow-lg
+                                             hover:shadow-xl hover:shadow-black/20"
                                 >
-                                    Iniciar Proyecto →
-                                </motion.span>
-                            </Button>
+                                    <motion.span
+                                        animate={{ x: [0, 5, 0] }}
+                                        transition={{ duration: 2, repeat: Infinity }}
+                                    >
+                                        Iniciar Proyecto →
+                                    </motion.span>
+                                </Button>
+                            </Link>
                         </motion.div>
 
                         <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
-                            <Button
-                                variant="outline"
-                                size="lg"
-                                className="w-full md:w-auto md:px-8 md:py-6 border-[#181717]/10 md:text-lg
-                                         text-[#181717] hover:bg-[#181717]/5 transition-all duration-300"
-                            >
-                                Explorar Más
-                            </Button>
+                            <Link href="/Sobre-Nosotros">
+                                <Button
+                                    variant="outline"
+                                    size="lg"
+                                    className="w-full md:w-auto md:px-8 md:py-6 border-[#181717]/10 md:text-lg
+                                             text-[#181717] hover:bg-[#181717]/5 transition-all duration-300"
+                                >
+                                    Explorar Más
+                                </Button>
+                            </Link>
                         </motion.div>
                     </motion.div>
                 </motion.div>
