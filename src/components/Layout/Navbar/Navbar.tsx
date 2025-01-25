@@ -109,7 +109,11 @@ export default function Navbar() {
           opacity: isOpen ? 1 : 0
         }}
         transition={{ duration: 0.3, ease: "easeInOut" }}
-        className="md:hidden overflow-hidden bg-[#E5E5E5]/98 backdrop-blur-lg"
+        style={{
+          backgroundColor: "rgba(229, 229, 229, 0.98)",
+          backdropFilter: "blur(12px)",
+        }}
+        className="md:hidden overflow-hidden"
       >
         <div className="px-4 py-2">
           {links.map(({ href, label }) => (
